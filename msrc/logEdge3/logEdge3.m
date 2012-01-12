@@ -1,7 +1,7 @@
 function bw = logEdge3(data, sigma, s, rfactor)
-%LOGEDGE3    Edge detecting 3D algorithm
-%    Input:    
-%    Output:    
+%LOGEDGE3    LOG edge detecting algorithm in 3D.
+%    Input:    Dataset and factors.
+%    Output:    Black white dataset.
 %    Author:    Tsenmu
 %    Date:    2012.01.12
 %    Reference:    

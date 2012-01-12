@@ -1,12 +1,11 @@
 function bw = sobelEdge3(dataset)
 %SOBELEDGE3    Edge detecting by sobel operator
-%    Input:    Dataset files
-%    Output:    Binary text image
+%    Input:    Dataset.
+%    Output:    Black white dataset.
 %    Author:    Tsenmu
 %    Date:    2012.01.12
 %    Reference:    
-%                1.www.google.com
-%                2.www.wikepedia.com
+
 
 
     thresh = 3100;

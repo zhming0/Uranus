@@ -1,12 +1,11 @@
 function [ ] = linearFitting3_entry(  )
-%LINEARFITTING3_ENTRY    The entry to the line correspondence function
+%LINEARFITTING3_ENTRY    The entry to linear fitting in 3D function.
 %    Input:    
 %    Output:    
-%    Author:    Tsenmu
+%    Author:    mjzshd
 %    Date:    2012.01.12
 %    Reference:    
-%                1.www.google.com
-%                2.www.wikepedia.com
+
 
     inputFile = char(input(''));
     outputFile = char(input(''));

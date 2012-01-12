@@ -1,12 +1,11 @@
 function result = linearFitting3( dataset )
-%LINEARFITTING3    Line correspondence
-%    Input:    Dataset 
-%    Output:    
-%    Author:    Tsenmu
+%LINEARFITTING3    Linear fitting in 3D.
+%    Input:    Dataset.
+%    Output:    Dataset.
+%    Author:    mjzshd
 %    Date:    2012.01.12
 %    Reference:    
-%                1.www.google.com
-%                2.www.wikepedia.com
+
 
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
