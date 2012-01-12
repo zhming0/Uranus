@@ -1,12 +1,11 @@
 function res = centralFitting_calcCenter(bw)
-%CENTRALFITTING_CALCCENTER    Calculate center to finish central fitting
-%    Input:    Binary text image
-%    Output:    The center of the binary text image
+%CENTRALFITTING_CALCCENTER    Calculate central.
+%    Input:    Black white image.
+%    Output:    The center of the black white image.
 %    Author:    Tsenmu
 %    Date:    2012.01.12
 %    Reference:    
-%                1.www.google.com
-%                2.www.wikepedia.com
+
 
     [r c] = size(bw);
     res = false(r, c);

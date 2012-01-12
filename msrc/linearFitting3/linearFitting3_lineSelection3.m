@@ -1,12 +1,11 @@
-function  matrix  = lineSelection3(dataset, divideSize )
-%LINESELECTION3    Line selecting
-%    Input:    Dataset,the size used to divide lines
-%    Output:    
-%    Author:    Tsenmu
+function  matrix  = linearFitting3_lineSelection3(dataset, divideSize )
+%LINESELECTION3    Line selecting.
+%    Input:    Dataset, the size used to divide lines.
+%    Output:    Dataset.
+%    Author:    mjzshd
 %    Date:    2012.01.12
 %    Reference:    
-%                1.www.google.com
-%                2.www.wikepedia.com
+
 
 %%***********************************************************************
 %

@@ -1,20 +1,12 @@
 function [] = public_dicomrewrite(sourceDir, targetDir, WindowSelection)
 %PUBLIC_DICOMREWRITE    Translate dicom files from source directory to
-%                       png in target directory
-%    Input:    Source directory, target directory
-%    Output:    Png files
+%                       png in target directory.
+%    Input:    Source directory, target directory, windowSelection.
+%    Output:    png files.
 %    Author:    Tsenmu
 %    Date:    2012.01.12
 %    Reference:    
-%                1.www.google.com
-%                2.www.wikepedia.com
 
-	%% DICOMREWRITE
-	% This function read as an input variables a source directory and a target
-	% directory.
-	% The source directory defines a directory directly containts
-	% with .dcm file(s), store them into target directory as .bmp file(s)
-	%%
 	
 	if(1)
 		d = dir;

@@ -1,12 +1,11 @@
-function bw = KRCorner(I)
-%KRCORNER    Picking up focal spot
-%    Input:    
-%    Output:    
+function bw = KRCorner3(I)
+%KRCORNER    KR Corner algorithm.
+%    Input:    Gray scale image.
+%    Output:    Black white image.
 %    Author:    Tsenmu
 %    Date:    2012.01.12
 %    Reference:    
-%                1.www.google.com
-%                2.www.wikepedia.com
+
 
     %H = fspecial('prewitt');
     %I = filter2(H, I);

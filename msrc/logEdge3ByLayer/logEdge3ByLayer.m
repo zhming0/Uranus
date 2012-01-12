@@ -1,12 +1,11 @@
 function res = logEdge3ByLayer(dataset)
-%LOGEDGE3BYLAYER    Edge detecting algorithm by layer
-%    Input:    Dataset files
-%    Output:    
+%LOGEDGE3BYLAYER    LOG edge detecting algorithm by layer
+%    Input:    Dataset.
+%    Output:    Black white dataset.
 %    Author:    Tsenmu
 %    Date:    2012.01.12
 %    Reference:    
-%                1.www.google.com
-%                2.www.wikepedia.com
+
 
     [row, col, ~, h] = size(dataset);
     res = false([row, col, 1, h]);
