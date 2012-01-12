@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>UProcessItemModify</class>
+ <widget class="QWidget" name="UProcessItemModify">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>255</width>
+    <height>117</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>Modify process</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="res.qrc">
+    <normaloff>:/icons/edit.png</normaloff>:/icons/edit.png</iconset>
+  </property>
+  <widget class="QPushButton" name="fileBtn">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>12</y>
+     <width>36</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/folder.png</normaloff>:/icons/folder.png</iconset>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="filePath">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>15</y>
+     <width>191</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="placeholderText">
+    <string>Process executable</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="args">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>48</y>
+     <width>236</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="placeholderText">
+    <string>Arguments</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ok">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>79</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&amp;OK</string>
+   </property>
+   <property name="default">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="cancel">
+   <property name="geometry">
+    <rect>
+     <x>171</x>
+     <y>79</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&amp;Cancel</string>
+   </property>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>ok</tabstop>
+  <tabstop>cancel</tabstop>
+  <tabstop>filePath</tabstop>
+  <tabstop>args</tabstop>
+  <tabstop>fileBtn</tabstop>
+ </tabstops>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
+ <connections/>
+</ui>
