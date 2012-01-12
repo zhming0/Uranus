@@ -5,8 +5,7 @@ function bw = logEdge3(data, sigma, s, rfactor)
 %    Author:    Tsenmu
 %    Date:    2012.01.12
 %    Reference:    
-%                1.www.google.com
-%                2.www.wikepedia.com
+
 
     [row, col, ~, h] = size(data);
 
