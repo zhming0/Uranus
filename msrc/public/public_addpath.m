@@ -7,3 +7,4 @@ function [] = public_addpath(msrc_path)
 %    Reference:    
 	addpath(genpath(msrc_path));
 	cd(msrc_path);
+end
