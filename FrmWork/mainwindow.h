@@ -26,6 +26,7 @@ private:
     QProcess* cproc;
     QString openingFile,openingFileL,inFile,outFile;
 private slots:
+    void on_actionClear_Log_triggered();
     void on_actionClose_Window_triggered();
     void on_actionLit_up_the_image_toggled(bool );
     void on_actionSave_triggered();
@@ -38,6 +39,8 @@ private slots:
     void dragEnterEvent(QDragEnterEvent *);
     void dropEvent(QDropEvent *);
     void doneOpening();
+    void setLbl(QString);
+    void dispLog(QString);
 signals:
     void newDlg();
 };

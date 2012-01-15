@@ -8,22 +8,15 @@ function [] = robertsEdge3ByLayer_entry()
 %    Reference:    
     inFileName = char(input(''));
     outFileName = char(input(''));
-    
-    argc = 1; fprintf('%d\n', argc);
-    
-    argv(1) = input(''); 
-    if argv(1) == public_defaultNumber()
-        argv(1) = 0.1;
-    end
+        
+    argv(1) = io_prompt(0.1,'');%input(''); 
     dataset = public_urw2dataset(inFileName);
     
-    process = 0.1;
-    fprintf('%f\n', process);
+    io_progress(0.1);
     
-    robertsEdge3ByLayer(dataset, argv(0));
+    res=robertsEdge3ByLayer(dataset, argv(1));
     
     public_dataset2urw(outFileName, res);
     
-    process = 1.0;
-    fprintf('%f\n', process);
+    io_progress(1);
 end

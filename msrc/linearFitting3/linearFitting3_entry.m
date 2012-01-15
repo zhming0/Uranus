@@ -6,17 +6,12 @@ function [ ] = linearFitting3_entry(  )
 %    Date:    2012.01.12
 %    Reference:    
 
-
     inputFile = char(input(''));
     outputFile = char(input(''));
-    fprintf(1, '1\n');
-    arg = int32(input(''));
+    
+    arg = int32(io_prompt(5,'Input an integer'));
     dataset = public_urw2dataset(inputFile);
-    if arg ~= public_defaultnumber()
-        result = lineSelection3(dataset, arg);
-    else
-        result = lineSelection3(dataset, 5);
-    end
+    result = linearFitting3_lineSelection3(dataset, arg);
     public_dataset2urw(outputFile, result);
 end
 

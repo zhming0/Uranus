@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>255</width>
-    <height>117</height>
+    <height>80</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -50,24 +50,11 @@
     <string>Process executable</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="args">
-   <property name="geometry">
-    <rect>
-     <x>9</x>
-     <y>48</y>
-     <width>236</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="placeholderText">
-    <string>Arguments</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="ok">
    <property name="geometry">
     <rect>
      <x>90</x>
-     <y>79</y>
+     <y>45</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -83,7 +70,7 @@
    <property name="geometry">
     <rect>
      <x>171</x>
-     <y>79</y>
+     <y>45</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -97,7 +84,6 @@
   <tabstop>ok</tabstop>
   <tabstop>cancel</tabstop>
   <tabstop>filePath</tabstop>
-  <tabstop>args</tabstop>
   <tabstop>fileBtn</tabstop>
  </tabstops>
  <resources>

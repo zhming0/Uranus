@@ -1,6 +1,8 @@
 #include "uprocessitem.h"
 #include "uprocessitemmodify.h"
 #include "processtool.h"
+#include "mainwindow.h"
+#include <QInputDialog>
 
 UProcessItem::UProcessItem(QString file,QObject* parent):
     QObject(parent)
@@ -13,15 +15,14 @@ UProcessItem::UProcessItem(QString file,QObject* parent):
 
 void UProcessItem::updateText()
 {
-    setText(path.split(QRegExp("[\\\\\\/]")).last()+" - "+args);
+    setText(path.split(QRegExp("[\\\\\\/]")).last());
 }
 
 void UProcessItem::modify()
 {
-    UProcessItemModify dlg(path,args);
+    UProcessItemModify dlg(path);
     if(dlg.exec()==QDialog::Accepted)
     {
-        args=dlg.args;
         path=dlg.path;
         updateText();
     }
@@ -63,44 +64,55 @@ void UProcessItem::setProcessed(bool b)
 void UProcessItem::request()
 {
     QProcess *p=(QProcess *)sender();
-    if(p->canReadLine())
+    while(p->canReadLine())
     {
         bool ok;
-        QString str=p->readLine();
-        if(argSent)
+        QString cmd=p->readLine();
+        if(cmd.left(2)=="''")
         {
-            float p=str.toFloat(&ok);
-            if(ok)
+            switch(cmd.at(2).toAscii())
             {
-                ProcessTool* tool=(ProcessTool*)listWidget()->parentWidget();
-                tool->setProgress(p);
+                case 'i':
+                {
+                    QStringList prompt=cmd.mid(4).split('\'');
+                    if(prompt.length()<3)
+                        continue;
+                    QString ret,def=prompt[2];
+                    if(prompt[1]=="s")
+                    {
+                        ret=QInputDialog::getText(0,"Prompt",prompt[0],QLineEdit::Normal,def,&ok);
+                        def="'"+def.replace('\'',"''")+"'";
+                        ret="'"+ret.replace('\'',"''")+"'";
+                    }else
+                    {
+                        double num=def.toDouble(&ok);
+                        if(!ok)
+                            continue;
+                        ret=ret.number(QInputDialog::getDouble(0,"Prompt",prompt[0],num,-2147483647,2147483647,1,&ok));
+                    }
+                    if(!ok)
+                    {
+                        ret=def;
+                    }
+                    ret+=+"\n";
+                    p->write(ret.toAscii());
+                    break;
+                }
+                case 'p':
+                {
+                    float prog=cmd.mid(4).toFloat(&ok);
+                    if(!ok)
+                        continue;
+                    ProcessTool* pt=(ProcessTool*)this->listWidget()->parentWidget();
+                    pt->setProgress(prog);
+                    break;
+                }
+                default:
+                    emit(log(cmd));
             }
         }else
         {
-            int c=str.toInt(&ok);
-            if(ok)
-            {
-                argSent=true;
-                args=args.trimmed();
-                p->write(args.toAscii());
-                int n;
-                if(args.isEmpty())
-                    n=-1;
-                else
-                {
-                    QRegExp reg("\\b+");
-                    reg.indexIn(args);
-                    n=reg.captureCount();
-                }
-                c=c-n;
-                while(c>1)
-                {
-                    p->write(" -inf");
-                    c--;
-                }
-                p->write("\n");
-            }
-
+            emit(log(cmd));
         }
     }
 }
