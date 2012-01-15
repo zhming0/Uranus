@@ -8,7 +8,7 @@ function [] = public_dataset2urw(filename, dataset)
 
   %  filename = native2unicode(uint8(filename));
     fid = fopen(filename, 'w');
-	dataset = squeeze(dataset)
+	dataset = squeeze(dataset);
     [r, c, t] = size(dataset);
     fwrite(fid, [c, r], 'uint16');
     for z = 1 :t

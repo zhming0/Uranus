@@ -3,6 +3,8 @@
 #include <QThread>
 #include <QImage>
 #include <QMessageBox>
+#include <QTextCodec>
+#include <QLabel>
 UGLView::UGLView(QWidget *parent) :
     QGLWidget(parent)
 {
@@ -60,12 +62,18 @@ public:
 
     void run()
     {
+        main();
+        v->status="";
+        v->opening=false;
+    }
+
+    void main()
+    {
         QFile f(v->openFile);
-        bool &opening=v->opening;
-        opening=false;
+        v->opening=false;
         v->status="Reading file";
         if(f.open(f.ReadOnly)){
-            opening=true;
+            v->opening=true;
             QVector<float*> &map=v->map;
             map.clear();
 
@@ -79,6 +87,23 @@ public:
             }
 
             int len=w*h;
+            v->dispStr="";
+            if(len==0)
+            {
+                qDebug()<<"func";
+                if(f.atEnd())
+                {
+                    f.close();
+                    return;
+                }
+                f.read(1);
+                QTextCodec *cc=QTextCodec::codecForLocale();
+                while(!f.atEnd())
+                    v->dispStr+=cc->toUnicode(f.readLine())+"\n";
+                qDebug()<<v->dispStr;
+                f.close();
+                return;
+            }
             char b;
             Byte min=255,max=10;
             int n=0;
@@ -161,8 +186,6 @@ public:
             f.read(&b,1);
             f.close();
         }
-        v->status="";
-        opening=false;
     }
 };
 
@@ -198,8 +221,15 @@ void UGLView::doneReading()
     delete sender();
     if(vertexCoord.empty())
     {
+        if(!dispStr.isEmpty()){
+            emit(setLbl(dispStr));
+            hide();
+            emit(doneGenerating());
+        }
         pdlg.setProgress(2);
     }else{
+        emit(setLbl(""));
+        show();
         float r1=(float)w/width(),r2=(float)h/height();
         zoom=(r1>r2)?r2:r1;
         resizeGL(width(),height());

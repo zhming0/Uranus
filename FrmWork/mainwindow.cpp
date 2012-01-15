@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QFile>
 #include <time.h>
+#include <QScrollBar>
 #include "sharedmemory.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -15,6 +16,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionOpen,SIGNAL(triggered()),SLOT(openFile()));
     connect(ui->actionNew_Window,SIGNAL(triggered()),SIGNAL(newDlg()));
     connect(ui->disp,SIGNAL(doneGenerating()),SLOT(doneOpening()));
+    connect(ui->disp,SIGNAL(setLbl(QString)),SLOT(setLbl(QString)));
+    connect(ui->processToolContent,SIGNAL(log(QString)),SLOT(dispLog(QString)));
+    dispLog("<b>''Welcome!''</b>");
+
+    ui->lbl->hide();
     view=ui->disp;
 
     ui->actionStop->setEnabled(false);
@@ -109,6 +115,26 @@ void MainWindow::setTitle(QString tt)
     setWindowTitle(tt+" - "+str);
 }
 
+void MainWindow::dispLog(QString str)
+{
+    QScrollBar *scr=ui->logText->horizontalScrollBar();
+    bool scroll=(scr->value()>=scr->maximum());
+    ui->logText->append(str);
+    if(scroll)
+        scr->setValue(scr->maximum());
+}
+
+void MainWindow::setLbl(QString str)
+{
+    if(str.isEmpty())
+        ui->lbl->hide();
+    else
+    {
+        ui->lbl->setText(str);
+        ui->lbl->show();
+    }
+}
+
 void MainWindow::dragEnterEvent(QDragEnterEvent *e)
 {
     if(e->mimeData()->hasUrls())
@@ -179,4 +205,9 @@ void MainWindow::on_actionLit_up_the_image_toggled(bool b)
 void MainWindow::on_actionClose_Window_triggered()
 {
     close();
+}
+
+void MainWindow::on_actionClear_Log_triggered()
+{
+    ui->logText->clear();
 }

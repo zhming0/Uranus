@@ -6,7 +6,7 @@ function io_progress( progress )
 %    Date:    2012.01.14
 %    Reference:  
 
-fprintf('''p''%f\n',progress);
+fprintf('''''p''%f\n',progress);
 
 end
 

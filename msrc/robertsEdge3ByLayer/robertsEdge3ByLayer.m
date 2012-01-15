@@ -15,7 +15,7 @@ function res = robertsEdge3ByLayer(dataset, argv)
         bw = edge(dataset(:, :, 1, z), 'roberts', argv);
         res(:, :, 1, z) = bw;
         process = process + inc;
-        fprintf('%f\n', process);
+        io_progress(process);
     end
     
     res = uint8(res) * 255;

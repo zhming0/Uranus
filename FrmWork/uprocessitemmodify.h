@@ -11,10 +11,10 @@ class UProcessItemModify : public QDialog
 {
     Q_OBJECT
 public:
-    explicit UProcessItemModify(QString path,QString args,QDialog *parent = 0);
+    explicit UProcessItemModify(QString path,QDialog *parent = 0);
     ~UProcessItemModify();
     operator bool();
-    QString path,args;
+    QString path;
 private:
     Ui::UProcessItemModify *ui;
     bool isOk;

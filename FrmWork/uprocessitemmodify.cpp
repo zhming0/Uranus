@@ -2,13 +2,12 @@
 #include "ui_uprocessitemmodify.h"
 #include <QFileDialog>
 
-UProcessItemModify::UProcessItemModify(QString path,QString args,QDialog *parent) :
+UProcessItemModify::UProcessItemModify(QString path,QDialog *parent) :
         QDialog(parent,Qt::Tool),
     ui(new Ui::UProcessItemModify)
 {
     ui->setupUi(this);
     ui->filePath->setText(path);
-    ui->args->setText(args);
 }
 
 UProcessItemModify::~UProcessItemModify()
@@ -19,7 +18,6 @@ UProcessItemModify::~UProcessItemModify()
 void UProcessItemModify::on_ok_clicked()
 {
     path=ui->filePath->text();
-    args=ui->args->text();
     this->accept();
 }
 

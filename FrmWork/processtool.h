@@ -42,6 +42,8 @@ private slots:
     void on_list_customContextMenuRequested(QPoint pos);
     void processError(QProcess::ProcessError);
     void processDone(int);
+signals:
+    void log(QString);
 };
 
 #endif // PROCESSTOOL_H

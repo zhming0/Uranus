@@ -36,6 +36,7 @@ private:
     void wheelEvent(QWheelEvent *);
     bool down;
     bool rotate;
+    QString dispStr;
 
     QVector<float*> map;
     int w,h,sw,sh;
@@ -54,6 +55,7 @@ public slots:
     void updateProg();
 signals:
     void doneGenerating();
+    void setLbl(QString);
 };
 
 #endif // UGLVIEW_H

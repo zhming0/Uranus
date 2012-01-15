@@ -109,7 +109,9 @@ void ProcessTool::on_actionAdd_triggered()
         addList=QFileDialog::getOpenFileNames(0,"Open an executable process module");
     foreach(QString file,addList)
     {
-        ui->list->insertItem(i++,new UProcessItem(file,this));
+        UProcessItem* item=new UProcessItem(file,this);
+        ui->list->insertItem(i++,item);
+        connect(item,SIGNAL(log(QString)),SIGNAL(log(QString)));
     }
     addList.clear();
 }
@@ -174,7 +176,7 @@ void ProcessTool::on_actionSave_List_triggered()
             for(int i=0,c=ui->list->count();i<c;i++)
             {
                 UProcessItem* item=(UProcessItem*)ui->list->item(i);
-                file.write((item->path+"\n"+item->args+"\n").toUtf8());
+                file.write((item->path+"\n").toUtf8());
             }
         }
     }
@@ -193,7 +195,7 @@ void ProcessTool::on_actionOpen_List_triggered()
             while(!file.atEnd())
             {
                 UProcessItem* item=new UProcessItem(QString::fromUtf8(file.readLine().trimmed()));
-                item->args=QString::fromUtf8(file.readLine().trimmed());
+                connect(item,SIGNAL(log(QString)),SIGNAL(log(QString)));
                 item->updateText();
                 ui->list->addItem(item);
             }

@@ -14,12 +14,14 @@ public:
     void modify();
     bool process(QProcess*&,QString&,QString&);
     void setProcessed(bool);
-    QString path,args;
+    QString path;
     void updateText();
 private:
     bool processed,argSent;
 private slots:
     void request();
+signals:
+    void log(QString);
 };
 
 #endif // UPROCESSITEM_H
