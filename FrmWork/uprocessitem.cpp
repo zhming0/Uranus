@@ -3,6 +3,8 @@
 #include "processtool.h"
 #include "mainwindow.h"
 #include <QInputDialog>
+#include<cstdio>
+#include<iostream>
 
 UProcessItem::UProcessItem(QString file,QObject* parent):
     QObject(parent)
@@ -70,17 +72,20 @@ void UProcessItem::setProcessed(bool b)
 
 void UProcessItem::request()
 {
-    QProcess *p=(QProcess *)sender();
+    QProcess *p=(QProcess *)sender();   //???
+
     while(p->canReadLine())
     {
         bool ok;
         QString cmd=p->readLine();
+        while(cmd.length() > 1 && (cmd[0] == '>' || cmd[0]==' '))
+            cmd = cmd.mid(1);               // Filter weird output
         if(cmd.left(2)=="''")
         {
             switch(cmd.at(2).toAscii())
             {
                 case 'i':
-                {
+                {                 
                     QStringList prompt=cmd.mid(4).split('\'');
                     if(prompt.length()<3)
                         continue;

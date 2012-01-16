@@ -18,7 +18,7 @@ function  matrix  = linearFitting3_lineSelection3(dataset, divideSize )
         for i = 1:divideSize:row-divideSize
             for j = 1:divideSize:col-divideSize
                 midre = squeeze(dataset(i:i+divideSize, j:j+divideSize, 1, k:k+divideSize));
-                matrix(i:i+divideSize, j:j+divideSize, 1, k:k+divideSize) = linearfitting3d(midre);
+                matrix(i:i+divideSize, j:j+divideSize, 1, k:k+divideSize) = linearFitting3(midre);
             end;
         end;
     end;
