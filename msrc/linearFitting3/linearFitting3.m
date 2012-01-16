@@ -95,7 +95,7 @@ function result = linearFitting3( dataset )
                 
                 %[x y z dis;t1 t2 t3 0;]
                 
-                if dis<1 && dataset(x, y, z)~=0
+                if dis<=0.25 && dataset(x, y, z)~=0
                     result(x, y, 1, z) = true;
                 end
             end

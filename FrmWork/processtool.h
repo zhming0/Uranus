@@ -10,6 +10,10 @@ namespace Ui {
     class ProcessTool;
 }
 
+/*
+    This class provided ui for process area.
+*/
+
 class ProcessTool : public QWidget
 {
     Q_OBJECT
