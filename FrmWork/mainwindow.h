@@ -20,7 +20,7 @@ public:
     ~MainWindow();
     UGLView* view;
     void setTitle(QString);
-    friend int main(int,char**);
+    friend int main(int,char**);    //What's this?
 private:
     Ui::MainWindow *ui;
     QProcess* cproc;
@@ -39,7 +39,7 @@ private slots:
     void dragEnterEvent(QDragEnterEvent *);
     void dropEvent(QDropEvent *);
     void doneOpening();
-    void setLbl(QString);
+    void setLbl(QString);   //Set label for gldisplay
     void dispLog(QString);
 signals:
     void newDlg();

@@ -3,6 +3,8 @@
 #include "processtool.h"
 #include "mainwindow.h"
 #include <QInputDialog>
+#include<cstdio>
+#include<iostream>
 
 UProcessItem::UProcessItem(QString file,QObject* parent):
     QObject(parent)
@@ -25,6 +27,7 @@ void UProcessItem::modify()
     {
         path=dlg.path;
         updateText();
+        dlg.close();        //Click ok, than dlg should be close
     }
 }
 
@@ -34,6 +37,12 @@ bool UProcessItem::process(QProcess*& ret,QString& inFile,QString& outFile)
         return false;
 
     ret=new QProcess;
+
+    #if defined(__APPLE__) || defined(MACOSX)
+    if (path[0]!='/')           //Fix path bug for mac os
+        path.prepend("/");
+    #endif
+
     ret->start(path);
     setIcon(QIcon(":/icons/red.png"));
     if(ret->waitForStarted())
@@ -63,17 +72,20 @@ void UProcessItem::setProcessed(bool b)
 
 void UProcessItem::request()
 {
-    QProcess *p=(QProcess *)sender();
+    QProcess *p=(QProcess *)sender();   //???
+
     while(p->canReadLine())
     {
         bool ok;
         QString cmd=p->readLine();
+        while(cmd.length() > 1 && (cmd[0] == '>' || cmd[0]==' '))
+            cmd = cmd.mid(1);               // Filter weird output
         if(cmd.left(2)=="''")
         {
             switch(cmd.at(2).toAscii())
             {
                 case 'i':
-                {
+                {                 
                     QStringList prompt=cmd.mid(4).split('\'');
                     if(prompt.length()<3)
                         continue;

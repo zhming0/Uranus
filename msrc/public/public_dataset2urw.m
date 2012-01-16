@@ -1,6 +1,6 @@
-function [] = public_dataset2urw(filename, dataset)
+function [] = public_dataset2urw(filename, dataset, pixelSize)
 %PUBLIC_DATASET2URW    Translate dataset files into urw files
-%    Input:    Output urw file full path and the dataset.
+%    Input:    Output urw file full path, the dataset, and the space between between the pixels.
 %    Output:    
 %    Author:    Tsenmu
 %    Date:    2012.01.12
@@ -16,5 +16,6 @@ function [] = public_dataset2urw(filename, dataset)
         fwrite(fid, dataset(:, :, z));
     end
     fwrite(fid, 0);
+    fwrite(fid, pixelSize, 'double');
     fclose(fid);
 end

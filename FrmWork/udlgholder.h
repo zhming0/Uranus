@@ -5,6 +5,10 @@
 #include <QVector>
 #include "mainwindow.h"
 
+/*
+This is class is made for multiple mainwindows.
+*/
+
 class UDlgHolder : public QObject
 {
     Q_OBJECT

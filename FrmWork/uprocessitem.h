@@ -17,7 +17,7 @@ public:
     QString path;
     void updateText();
 private:
-    bool processed,argSent;
+    bool processed, argSent;
 private slots:
     void request();
 signals:
