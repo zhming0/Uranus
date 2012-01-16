@@ -1,7 +1,7 @@
 function [dataset,pixelSize] = public_urw2dataset(filename)
 %PUBLIC_URW2DATASET    Translate urw files into dataset.
 %    Input:    A urw file.
-%    Output:    Dataset.
+%    Output:    Dataset. spaces between the pixels
 %    Author:    Tsenmu
 %    Date:    2012.01.12
 %    Reference:    

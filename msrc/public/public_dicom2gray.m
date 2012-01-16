@@ -11,7 +11,7 @@ function res = public_dicom2gray(filename, WindowSelection)
 	end
     img = dicomread(filename);
     info = dicominfo(filename);
-	
+
 	rsri = 0;
 	if isfield(info, 'RescaleSlope') && isfield(info, 'RescaleIntercept')
 		rsri = 1;
@@ -32,7 +32,7 @@ function res = public_dicom2gray(filename, WindowSelection)
     
 	[r, c] = size(img);
 	res = uint8(zeros(r, c));
-	
+
     for i = 1 : r
         for j = 1 : c
             V = double(img(i, j));
