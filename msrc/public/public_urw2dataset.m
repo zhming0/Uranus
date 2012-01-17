@@ -24,5 +24,6 @@ function [dataset,pixelSize] = public_urw2dataset(filename)
         dataset=[];
         pixelSize=double([0,0,0]);
     end
+    dataset =uint8(dataset);
     fclose(fid);
 end
