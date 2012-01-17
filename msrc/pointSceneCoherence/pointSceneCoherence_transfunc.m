@@ -17,10 +17,21 @@ lt=[pointList1(1).x,pointList1(1).y,pointList1(1).z,1;
     ];
 
 rt=[pointList2(1).x;pointList2(2).x;pointList2(3).x;pointList2(4).x];
-[a,b,c,d]=lt\rt;
+res=lt\rt;
+a=res(1);
+b=res(2);
+c=res(3);
+d=res(4);
 rt=[pointList2(1).y;pointList2(2).y;pointList2(3).y;pointList2(4).y];
-[e,f,g,h]=lt\rt;
+res=lt\rt;
+e=res(1);
+f=res(2);
+g=res(3);
+h=res(4);
 rt=[pointList2(1).z;pointList2(2).z;pointList2(3).z;pointList2(4).z];
-[i,j,k,l]=lt\rt;
-
+res=lt\rt;
+i=res(1);
+j=res(2);
+k=res(3);
+l=res(4);
 end
