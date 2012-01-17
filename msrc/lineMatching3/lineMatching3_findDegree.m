@@ -36,6 +36,6 @@ function [horizontal elevation] = lineMatching3_findDegree(pint1, pint2)
             elevation = elevation+90;
         end
     end
-    elevation = int8(elevation);
-    horizontal = int8(horizontal);
+    elevation = int8(elevation+1);
+    horizontal = int8(horizontal+1);
 end
