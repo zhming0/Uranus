@@ -58,6 +58,8 @@ function [result] = lineMatching3(dataset1, pixeldist1, dataset2, pixeldist2, ar
         if lineAngle_B(i, 1) == mostAngle_A(1)-hor_angle && lineAngle_B(i, 2) == mostangle_B(2)-ele_angle
             %Find parameter and test likelihood!
             %Choose the parameter of biggist likelihood.
+            [S tx ty tz] = lineMatching3_findParameter(lineA(indexofA), lineB(i), hor_angle, ele_angle, mostangle_A(1));
+            
         end
     end
     

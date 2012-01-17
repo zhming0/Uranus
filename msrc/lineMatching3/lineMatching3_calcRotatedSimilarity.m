@@ -17,7 +17,7 @@ function [ret] = lineMatching3_calcRotatedSimilarity(num_A, num_B,recordA, recor
             if rotated_ele > 90
                 rotated_ele = 180 - rotated_ele;
             end
-            ret = ret - (double(recordA(i+1, j+1))/double(num_A) - double(recordB(rotated_hor+1, rotated_ele+1))/double(num_B));
+            ret = ret - abs((double(recordA(i+1, j+1))/double(num_A) - double(recordB(rotated_hor+1, rotated_ele+1))/double(num_B)));
         end
     end
 end
