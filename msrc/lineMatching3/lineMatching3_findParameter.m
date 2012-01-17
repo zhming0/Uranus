@@ -1,4 +1,4 @@
-function [S, tx, ty, tz] = lineMatching3_findParameter(lineA, lineB, horizontal, elevation, hor_degA)
+function [S, R, tx, ty, tz] = lineMatching3_findParameter(lineA, lineB, horizontal, elevation, hor_degA)
 %lineMatching3_findParameter : find the tranform parameter in terms of two
 %lines.
 %    Input:     Two lines = 4 points.

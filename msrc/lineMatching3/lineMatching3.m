@@ -1,7 +1,7 @@
 function [result] = lineMatching3(dataset1, pixeldist1, dataset2, pixeldist2, arg1, arg2)
 %lineMatching3_entry : The main function of lineMatching 3D.
 %    Input:     dataset1, dataset2, pixeldist1/2 -> 1*3 matrix, arg1, arg2
-%    Output:    Name of a function along with some argument.
+%    Output:    Name of a function along with some argument(S, R, T).
 %    Author:    mjzshd
 %    Date:    2012.01.16
 %    Reference:
@@ -54,12 +54,18 @@ function [result] = lineMatching3(dataset1, pixeldist1, dataset2, pixeldist2, ar
         end
     end
     
+    likelihood = -1;
     for i = 1:num_B
         if lineAngle_B(i, 1) == mostAngle_A(1)-hor_angle && lineAngle_B(i, 2) == mostangle_B(2)-ele_angle
             %Find parameter and test likelihood!
             %Choose the parameter of biggist likelihood.
-            [S tx ty tz] = lineMatching3_findParameter(lineA(indexofA), lineB(i), hor_angle, ele_angle, mostangle_A(1));
-            
+            [S R tx ty tz] = lineMatching3_findParameter(lineA(indexofA), lineB(i), hor_angle, ele_angle, mostangle_A(1));
+            T = [tx; ty; tz];
+            tmp = lineMatching3_calcLikelihood(line_A, line_B, S, R, T);
+            if tmp > likelihood
+                likelihood = tmp;
+                result = [S R T];
+            end
         end
     end
     
