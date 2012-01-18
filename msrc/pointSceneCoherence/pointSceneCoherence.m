@@ -1,4 +1,4 @@
-function pointSceneCoherence( plist1 , plist2 )
+function func = pointSceneCoherence( plist1 , plist2 )
 %POINTSCENECOHERENCE main function of point correspondece using scene coherence
 %    Input:    2 list of points
 %    Output:    
@@ -22,7 +22,8 @@ while count<len1/2
     pl1=comb1(sel1);
     pl2=comb2(sel2);
     sel1=sel1+1;
-    list=[];
+    list.a=[];
+    list.b=[];
     count=0;
     if(sel1>len1)
         sel1=1;
@@ -43,7 +44,8 @@ while count<len1/2
             dist=((X-plist2(n).x)^2+(Y-plist2(n).y)^2+(Z-plist2(n).z)^2)^0.5;
             if dist<tol
                 count=count+1;
-                list=cat(1,list,[plist1(m),plist2(n)]);
+                list.a(count)=plist1(m);
+                list.b(count)=plist2(n);
                 break;
             end
         end
@@ -51,12 +53,30 @@ while count<len1/2
 end
 
 % get a better transformation function using the corresponded points
-len=length(list);
-if(len==0)
-    io_alert('Can''t correspond feature using points scene coherence');
+
+if(count==0)
+    io_alert('Faild to correspond features');
     return;
 end
+comb=combntns(1:count,3);
+len=length(comb);
+a=0;b=0;c=0;d=0;e=0;f=0;g=0;h=0;i=0;j=0;k=0;l=0;
+for m=1:len
+    [a2,b2,c2,d2,e2,f2,g2,h2,i2,j2,k2,l2]=pointSceneCoherence_transfunc(list.a(comb(m)),list.b(comb(m)));
+    a=a+(a2-a)/m;
+    b=b+(b2-b)/m;
+    c=c+(c2-c)/m;
+    d=d+(d2-d)/m;
+    e=e+(e2-e)/m;
+    f=f+(f2-f)/m;
+    g=g+(g2-g)/m;
+    h=h+(h2-h)/m;
+    i=i+(i2-i)/m;
+    j=j+(j2-j)/m;
+    k=k+(k2-k)/m;
+    l=l+(l2-l)/m;
+end
 
-
+func=sprintf('X=%f*x+%f*y+%f*z+%f;%cY=%f*x+%f*y+%f*z+%f;%cZ=%f*x+%f*y+%f*z+%f;',a,b,c,d,10,e,f,g,h,10,i,j,k,l);
 
 end
