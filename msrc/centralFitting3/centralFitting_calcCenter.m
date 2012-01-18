@@ -11,6 +11,7 @@ function res = centralFitting_calcCenter(bw)
     r_mean = mean(ri);
     c_mean = mean(ci);
     res(uint32(r_mean), uint32(c_mean)) = 1;
-    figure; imshow(bw);
-    figure; imshow(res);
+    res = uint8(res) .* 255;
+  %  figure; imshow(bw);
+  %  figure; imshow(res);
 end
