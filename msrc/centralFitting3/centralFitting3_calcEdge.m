@@ -1,5 +1,5 @@
 function res = centralFitting3_calcEdge(img)
-%CENTRALFITTING_CALCEDGE    Calculate edge.
+%CENTRALFITTING3_CALCEDGE    Calculate edge.
 %    Input:    Gray scale image.
 %    Output:    The edge of the region of interest
 %    Author:    Tsenmu

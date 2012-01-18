@@ -1,5 +1,5 @@
 function res = centralFitting3_calcCenter(bw)
-%CENTRALFITTING_CALCCENTER    Calculate central.
+%CENTRALFITTING3_CALCCENTER    Calculate central.
 %    Input:    Black white image.
 %    Output:    The center of the black white image.
 %    Author:    Tsenmu
