@@ -1,6 +1,6 @@
-function [res, level] = centralFitting_histeq(img, level)
+function [res, level] = centralFitting3_histeq(img, level)
     if nargin == 1
-        level = centralFitting_histeq_findLevel(img);
+        level = centralFitting3_histeq_findLevel(img);
     end
     [r c] = size(img);
     mask = false(r, c);

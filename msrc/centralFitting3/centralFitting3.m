@@ -1,5 +1,5 @@
-function [dataset_res, pixelSize_res] = centralFitting(dataset, pixelSize)
-%CENTRALFITTING    CENTRALFITTING
+function [dataset_res, pixelSize_res] = centralFitting3(dataset, pixelSize)
+%CENTRALFITTING3    CENTRALFITTING
 %    Input:    Dataset and pixelSize
 %    Output:    Dataset and pixelSize
 %    Author:    Tsenmu
@@ -9,6 +9,6 @@ function [dataset_res, pixelSize_res] = centralFitting(dataset, pixelSize)
     [r, c, ~, h] = size(dataset);
     dataset_res = uint8(zeros([r c 1 h]));
     for z = 1 : h
-        dataset_res(:, :, 1, z) = centralFitting_calcCenter(dataset(:, :, 1, z));
+        dataset_res(:, :, 1, z) = centralFitting3_calcCenter(dataset(:, :, 1, z));
     end
 end
