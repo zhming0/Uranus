@@ -5,8 +5,6 @@ function res = centralFitting_calcCenter(bw)
 %    Author:    Tsenmu
 %    Date:    2012.01.12
 %    Reference:    
-
-
     [r c] = size(bw);
     res = false(r, c);
     [ri, ci] = find(bw ~= 0);
