@@ -3,7 +3,7 @@ function [] = imageShrink_entry()
 %    Input:     
 %    Output:    
 %    Author:    mjzshd + ZHM
-%    Date:    2012.01.16
+%    Date:    2012.01.19
 %    Reference:
     inFileName = char(input(''));
     outFileName = char(input(''));
