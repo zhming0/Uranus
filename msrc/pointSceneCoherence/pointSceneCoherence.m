@@ -12,8 +12,8 @@ len2=length(plist2);
 count=0;
 
 % brutal force point selection
-comb1=combntns(1:len1,3);
-comb2=combntns(1:len2,3);
+comb1=combntns(1:len1,4);
+comb2=combntns(1:len2,4);
 sel1=1;
 sel2=1;
 
@@ -22,8 +22,8 @@ while count<len1/2
     pl1=plist1(comb1(sel1,:));
     pl2=plist2(comb2(sel2,:));
     sel1=sel1+1;
-    list.a=[];
-    list.b=[];
+    clist1=[];
+    clist2=[];
     count=0;
     if(sel1>len1)
         sel1=1;
@@ -47,8 +47,8 @@ while count<len1/2
             dist=((X-plist2(n).x)^2+(Y-plist2(n).y)^2+(Z-plist2(n).z)^2)^0.5;
             if dist<tol
                 count=count+1;
-                list.a(count)=plist1(m);
-                list.b(count)=plist2(n);
+                clist1=cat(clist1,plist1(m));
+                clist2=cat(clist2,plist2(n));
                 break;
             end
         end
@@ -61,12 +61,12 @@ if(count==0)
     io_alert('Faild to correspond features');
     return;
 end
-comb=combntns(1:count,3);
+comb=combntns(1:count,4);
 len=length(comb);
 a=0;b=0;c=0;d=0;e=0;f=0;g=0;h=0;i=0;j=0;k=0;l=0;
 n=0;
 for m=1:len
-    [a2,b2,c2,d2,e2,f2,g2,h2,i2,j2,k2,l2,ok]=pointSceneCoherence_transfunc(list.a(comb(m)),list.b(comb(m)));
+    [a2,b2,c2,d2,e2,f2,g2,h2,i2,j2,k2,l2,ok]=pointSceneCoherence_transfunc(clist1(comb(m,:)),clist2(comb(m,:)));
     if(~ok)
         continue;
     end

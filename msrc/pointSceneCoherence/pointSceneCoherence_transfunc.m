@@ -16,9 +16,11 @@ lt=[pointList1(1).x,pointList1(1).y,pointList1(1).z,1;
     pointList1(4).x,pointList1(4).y,pointList1(4).z,1;
     ];
 if(rank(lt)<4)
+    a=0;b=0;c=0;d=0;e=0;f=0;g=0;h=0;i=0;j=0;k=0;l=0;
     ok=false;
 	return; 
 end
+ok=true;
 
 rt=[pointList2(1).x;pointList2(2).x;pointList2(3).x;pointList2(4).x];
 res=lt\rt;
