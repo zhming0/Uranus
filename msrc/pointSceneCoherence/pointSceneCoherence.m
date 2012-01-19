@@ -18,7 +18,14 @@ comb2=combntns(1:len2,4);
 sel1=1;
 sel2=1;
 
-while count<len1/3
+minLen=min([len1 len2]);
+maxLen=max([len1 len2]);
+leastCount=3*minLen-2*maxLen;
+maxCount=0;
+resList1=[];
+resList2=[];
+
+while true
     % select points
     pl1=plist1(comb1(sel1,:));
     pl2=plist2(comb2(sel2,:));
@@ -54,10 +61,20 @@ while count<len1/3
             end
         end
     end
+    if(count>maxCount)
+        resList1=clist1;
+        resList2=clist2;
+        maxCount=count;        
+    end
+    if(count>leastCount)
+        break;
+    end
 end
 
 % get a better transformation function using the corresponded points
-count
+count=maxCount
+clist1=resList1;
+clist2=resList2;
 if(count==0)
     io_alert('Faild to correspond features');
     return;
