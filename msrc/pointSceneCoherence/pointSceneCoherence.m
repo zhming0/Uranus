@@ -3,7 +3,7 @@ function func = pointSceneCoherence( plist1 , plist2 )
 %    Input:    2 list of points
 %    Output:    
 %    Author:    Davidaq
-%    Date:    2012.01.17
+%    Date:    2012.01.19
 %    Reference:       
 tol=io_prompt(2,'Tolerance exmamining points');
 
@@ -28,13 +28,16 @@ while count<len1/2
     if(sel1>len1)
         sel1=1;
         sel2=sel2+1;
+        io_progress(0.1+0.8*double(sel2)/double(len2));
         if(sel2>len2)
             break;
         end
     end
     % get a transformation function
-    [a,b,c,d,e,f,g,h,i,j,k,l]=pointSceneCoherence_transfunc(pl1,pl2);
-
+    [a,b,c,d,e,f,g,h,i,j,k,l,ok]=pointSceneCoherence_transfunc(pl1,pl2);
+    if(~ok)
+        continue;
+    end
     % check if this one works
     for m=1:len1
         X=a*plist1(m).x+b*plist1(m).y+c*plist1(m).z+d;
@@ -61,20 +64,26 @@ end
 comb=combntns(1:count,3);
 len=length(comb);
 a=0;b=0;c=0;d=0;e=0;f=0;g=0;h=0;i=0;j=0;k=0;l=0;
+n=0;
 for m=1:len
-    [a2,b2,c2,d2,e2,f2,g2,h2,i2,j2,k2,l2]=pointSceneCoherence_transfunc(list.a(comb(m)),list.b(comb(m)));
-    a=a+(a2-a)/m;
-    b=b+(b2-b)/m;
-    c=c+(c2-c)/m;
-    d=d+(d2-d)/m;
-    e=e+(e2-e)/m;
-    f=f+(f2-f)/m;
-    g=g+(g2-g)/m;
-    h=h+(h2-h)/m;
-    i=i+(i2-i)/m;
-    j=j+(j2-j)/m;
-    k=k+(k2-k)/m;
-    l=l+(l2-l)/m;
+    [a2,b2,c2,d2,e2,f2,g2,h2,i2,j2,k2,l2,ok]=pointSceneCoherence_transfunc(list.a(comb(m)),list.b(comb(m)));
+    if(~ok)
+        continue;
+    end
+    n=n+1;
+    a=a+(a2-a)/n;
+    b=b+(b2-b)/n;
+    c=c+(c2-c)/n;
+    d=d+(d2-d)/n;
+    e=e+(e2-e)/n;
+    f=f+(f2-f)/n;
+    g=g+(g2-g)/n;
+    h=h+(h2-h)/n;
+    i=i+(i2-i)/n;
+    j=j+(j2-j)/n;
+    k=k+(k2-k)/n;
+    l=l+(l2-l)/n;
+    io_progress(0.9+0.1*double(m)/double(len));
 end
 
 func=sprintf('X=%f*x+%f*y+%f*z+%f;%cY=%f*x+%f*y+%f*z+%f;%cZ=%f*x+%f*y+%f*z+%f;',a,b,c,d,10,e,f,g,h,10,i,j,k,l);

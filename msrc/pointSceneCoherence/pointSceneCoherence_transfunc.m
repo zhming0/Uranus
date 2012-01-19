@@ -1,10 +1,10 @@
-function [ a,b,c,d,e,f,g,h,i,j,k,l ] = pointSceneCoherence_transfunc( pointList1 , pointList2 )
+function [ a,b,c,d,e,f,g,h,i,j,k,l,ok ] = pointSceneCoherence_transfunc( pointList1 , pointList2 )
 %POINTSCENECOHERENCE_TRANSFUNC get the paramaters of a function using 4
 %       pairs of points
 %    Input:    2 point lists
 %    Output:    a transformation function maping from list1 to list2
 %    Author:    Davidaq
-%    Date:    2012.01.17
+%    Date:    2012.01.19
 %    Reference:   
 %    X=ax+by+cz+d
 %    Y=ex+fy+gz+h
@@ -15,6 +15,10 @@ lt=[pointList1(1).x,pointList1(1).y,pointList1(1).z,1;
     pointList1(3).x,pointList1(3).y,pointList1(3).z,1;
     pointList1(4).x,pointList1(4).y,pointList1(4).z,1;
     ];
+if(rank(lt)<4)
+    ok=false;
+	return; 
+end
 
 rt=[pointList2(1).x;pointList2(2).x;pointList2(3).x;pointList2(4).x];
 res=lt\rt;
