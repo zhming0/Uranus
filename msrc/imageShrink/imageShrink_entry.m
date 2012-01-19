@@ -16,5 +16,6 @@ function [] = imageShrink_entry()
     pixel(1) = pixel(1) * double(r)/double(x);
     pixel(2) = pixel(2) * double(c)/double(y);
     pixel(3) = pixel(3) * double(h)/double(z);
-    dataset2urw(outFileName, result, pixel);
+    
+    public_dataset2urw(outFileName, result, pixel);
 end
