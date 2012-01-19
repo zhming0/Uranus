@@ -16,22 +16,22 @@ function [result] = lineMatching3(dataset1, pixeldist1, dataset2, pixeldist2, ar
     lineAngle_B = zeros(num_B, 2);
     
     for i = 1:num_A
-        tmp = lineMatching3_findDegree(line_A(i, 1:3), line_A(i, 4:6));
-        lineAngle_A(i) = tmp;        
-        anglerecord_A(tmp(1), tmp(2)) = anglerecord_A(tmp(1), tmp(2))+1;
+        [tmp1 tmp2] = lineMatching3_findDegree(line_A(i, 1:3), line_A(i, 4:6));
+        lineAngle_A(i, :) = [tmp1 tmp2];
+        anglerecord_A(tmp1, tmp2) = anglerecord_A(tmp1, tmp2)+1;
     end
     for i = 1:num_B
-        tmp = lineMatching3_findDegree(line_B(i, 1:3), line_B(i, 4:6));
-        lineAngle_B(i) = tmp;
-        anglerecord_B(tmp(1), tmp(2)) = anglerecord_B(tmp(1), tmp(2))+1;
+        [tmp1 tmp2] = lineMatching3_findDegree(line_B(i, 1:3), line_B(i, 4:6));
+        lineAngle_B(i, :) = [tmp1 tmp2];
+        anglerecord_B(tmp1, tmp2) = anglerecord_B(tmp1, tmp2)+1;
     end
     
     tmp = -1;
     for i = 0 : 179
         for j = 0:90
-            tmp_similarity = lineMatching3_calcRotatedSimilarity(num_A, num_B, anglerecordA, anglerecordB, i, j);
+            tmp_similarity = lineMatching3_calcRotatedSimilarity(num_A, num_B, anglerecord_A, anglerecord_B, i, j);
             if tmp_similarity > tmp
-                tmp = similarity;
+                tmp = tmp_similarity;
                 hor_angle = i;
                 ele_angle = j;
             end
@@ -40,8 +40,8 @@ function [result] = lineMatching3(dataset1, pixeldist1, dataset2, pixeldist2, ar
     tmp = -1;
     for i = 1:181
         for j = 1:91
-            if A(i, j) > tmp
-                tmp = A(i, j);
+            if anglerecord_A(i, j) > tmp
+                tmp = anglerecord_A(i, j);
                 mostangle_A = [i-1 j-1];
             end
         end
@@ -53,10 +53,10 @@ function [result] = lineMatching3(dataset1, pixeldist1, dataset2, pixeldist2, ar
            break;
         end
     end
-    
+    result = 0
     likelihood = -1;
     for i = 1:num_B
-        if lineAngle_B(i, 1) == mostAngle_A(1)-hor_angle && lineAngle_B(i, 2) == mostangle_B(2)-ele_angle
+        if lineAngle_B(i, 1) == mostangle_A(1)-hor_angle && lineAngle_B(i, 2) == mostangle_B(2)-ele_angle
             %Find parameter and test likelihood!
             %Choose the parameter of biggist likelihood.
             [S R tx ty tz] = lineMatching3_findParameter(lineA(indexofA), lineB(i), hor_angle, ele_angle, mostangle_A(1));
@@ -68,5 +68,4 @@ function [result] = lineMatching3(dataset1, pixeldist1, dataset2, pixeldist2, ar
             end
         end
     end
-    
 end

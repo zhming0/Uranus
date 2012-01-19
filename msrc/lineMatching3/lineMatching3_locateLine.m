@@ -22,7 +22,12 @@ function [result] = lineMatching3_locateLine(dataset, pixeldist, divideSize)
                             if midre(ii, jj, kk)~=0
                                 start = [ii, jj, kk]; 
                                 tmp = lineMatching3_findEnd(start, midre);
-                                result(head) = [tmp(1).*pixeldist, tmp(2).*pixeldist];
+                                if tmp(1, :) == tmp(2, :)
+                                    continue
+                                end
+                                %tmp
+                                %pixeldist
+                                result(head, :) = [tmp(1, :).*pixeldist, tmp(2, :).*pixeldist];
                                 head = head+1;
                                 flag = true;
                             end
