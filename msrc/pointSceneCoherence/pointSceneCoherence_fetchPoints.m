@@ -13,7 +13,7 @@ for z=1:h
     for x=1:c
         for y=1:r
             if dataset(x,y,1,z)>100
-                pointList=cat(pointList,struct('x',x,'y',y,'z',z));
+                pointList=cat(1,pointList,struct('x',x,'y',y,'z',z));
             end
         end
     end
