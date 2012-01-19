@@ -1,4 +1,4 @@
-function level = centralFitting_histeq_findLevel (img)
+function level = centralFitting3_histeq_findLevel (img)
     [y, x] = imhist(img);
 %     figure; imhist(img);
     x_ne_0 = find(y ~= 0);
