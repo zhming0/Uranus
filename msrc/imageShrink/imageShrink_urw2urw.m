@@ -1,4 +1,4 @@
-function [  ] = public_urw2urw(filename1,filename2,height)
+function [  ] = imageShrink_urw2urw(filename1,filename2,height)
 %public_urw2urw    Compressed urw from urw files
 %    Input:    Filename1: urw file name before compressing, filename2: urw file name after
 %              compressing, height: picture numbers after compressing 
