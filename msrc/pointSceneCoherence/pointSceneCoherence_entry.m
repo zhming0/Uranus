@@ -13,8 +13,8 @@ sFile=io_getfile('*.urw','Please choose the sample image');
 pl1=pointSceneCoherence_fetchPoints(inFile);
 pl2=pointSceneCoherence_fetchPoints(sFile);
 io_progress(0.1);
-func=pointSceneCoherence(pl1,pl2);
-fp=fopen(outFile);
+func=pointSceneCoherence(pl1,pl2)
+fp=fopen(outFile,'w');
 fwrite(fp,uint8(zeros(1,5)),'uint8');
 fwrite(fp,func);
 fclose(fp);
