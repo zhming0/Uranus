@@ -6,7 +6,6 @@ function public_dir2urw( path, limit, filename )
 %    Author:    Davidaq
 %    Date:    2012.01.16
 %    Reference:  public_dataset2urw
-
     if(nargin == 2) 
         filename=limit;
         limit = inf;

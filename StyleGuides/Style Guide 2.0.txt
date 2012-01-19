@@ -87,13 +87,13 @@ function [] = xxx_entry()
     inFileName_reg = io_getfile(¡®*.urw¡¯, ¡®Please select another urw file to be registered.¡¯);
     [dataset, pixelSize] = public_urw2dataset(inFileName);
     [dataset_reg, pixelSize_reg] = public_urw2dataset(inFileName_reg);
-    process = 0.0;    io_progress(progress);
+    prog = 0.0;    io_progress(prog);
     argv(1) = io_prompt(0.1, ¡®¡¯);
     argv(2) = io_prompt(13.8, ¡®¡¯);
     dataset = doSomething_0(dataset, argv(1));
-    process = 0.5;    io_progress(progress);
+    prog = 0.5;    io_progress(prog);
     [dataset_new, pixelSize_new] = doSomething_1(dataset, pixelSize, dataset_reg, pixelSize_reg, argv(2));
     public_dataset2urw(dataset_new, pixelSize_new);
-    process = 1.0;    io_progress(progress);
+    prog = 1.0;    io_progress(prog);
 end
 

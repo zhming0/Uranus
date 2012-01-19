@@ -8,7 +8,11 @@ function [dataset_res, pixelSize_res] = centralFitting3(dataset, pixelSize)
     pixelSize_res = pixelSize;
     [r, c, ~, h] = size(dataset);
     dataset_res = uint8(zeros([r c 1 h]));
+    prog = 0.06; io_progress(prog); inc = double(0.90-0.06)/double(h);
     for z = 1 : h
-        dataset_res(:, :, 1, z) = centralFitting3_calcCenter(dataset(:, :, 1, z));
+        im = dataset(:, :, 1, z);
+        im = centralFitting3_calcEdge(im);
+        dataset_res(:, :, 1, z) = centralFitting3_calcCenter(im);
+        prog = prog + inc; io_progress(prog);
     end
 end
