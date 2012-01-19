@@ -12,15 +12,15 @@ len2=length(plist2);
 count=0;
 
 % brutal force point selection
-comb1=combntns(plist1,3);
-comb2=combntns(plist2,3);
+comb1=combntns(1:len1,3);
+comb2=combntns(1:len2,3);
 sel1=1;
 sel2=1;
 
 while count<len1/2
     % select points
-    pl1=comb1(sel1);
-    pl2=comb2(sel2);
+    pl1=plist1(comb1(sel1,:));
+    pl2=plist2(comb2(sel2,:));
     sel1=sel1+1;
     list.a=[];
     list.b=[];

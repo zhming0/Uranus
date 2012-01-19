@@ -10,13 +10,15 @@ function [] = robertsEdge3ByLayer_entry()
     outFileName = char(input(''));
         
     argv(1) = io_prompt(0.1,'');%input(''); 
-    dataset = public_urw2dataset(inFileName);
+    [dataset pixel] = public_urw2dataset(inFileName);
+    %Add pixel ^_^
     
     io_progress(0.1);
     
     res=robertsEdge3ByLayer(dataset, argv(1));
     
-    public_dataset2urw(outFileName, res);
+    public_dataset2urw(outFileName, res, pixel);
+    %Add pixel ^_^
     
     io_progress(1);
 end
