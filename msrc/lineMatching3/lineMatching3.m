@@ -10,11 +10,11 @@ function [result] = lineMatching3(dataset1, pixeldist1, dataset2, pixeldist2, ar
     anglerecord_A = zeros(181, 91);
     anglerecord_B = zeros(181, 91);
     
-    [num_A tmp] = size(line_A); 
-    [num_B tmp] = size(line_B); 
+    [num_A, ~] = size(line_A); 
+    [num_B, ~] = size(line_B); 
     lineAngle_A = zeros(num_A, 2);
     lineAngle_B = zeros(num_B, 2);
-    
+        
     for i = 1:num_A
         [tmp1 tmp2] = lineMatching3_findDegree(line_A(i, 1:3), line_A(i, 4:6));
         lineAngle_A(i, :) = [tmp1 tmp2];
@@ -26,6 +26,7 @@ function [result] = lineMatching3(dataset1, pixeldist1, dataset2, pixeldist2, ar
         anglerecord_B(tmp1, tmp2) = anglerecord_B(tmp1, tmp2)+1;
     end
     
+    %Find rotation diff in whole pic
     tmp = -1;
     for i = 0 : 179
         for j = 0:90
@@ -37,6 +38,7 @@ function [result] = lineMatching3(dataset1, pixeldist1, dataset2, pixeldist2, ar
             end
         end
     end
+    
     tmp = -1;
     for i = 1:181
         for j = 1:91
@@ -53,7 +55,7 @@ function [result] = lineMatching3(dataset1, pixeldist1, dataset2, pixeldist2, ar
            break;
         end
     end
-    result = 0
+    result = 0;
     likelihood = -1;
     for i = 1:num_B
         if lineAngle_B(i, 1) == mostangle_A(1)-hor_angle && lineAngle_B(i, 2) == mostangle_B(2)-ele_angle
