@@ -6,11 +6,12 @@ function pointSceneCoherence_entry( )
 %    Date:    2012.01.19
 %    Reference:   
 
-inFile=char(input(''));
+%inFile=char(input(''));
+inFile=io_getfile('*.urw','Please choose the corred image');
 outFile=char(input(''));
 sFile=io_getfile('*.urw','Please choose the sample image');
-pl1=pointSceneCoherence_entry_fetchPoints(inFile);
-pl2=pointSceneCoherence_entry_fetchPoints(sFile);
+pl1=pointSceneCoherence_fetchPoints(inFile);
+pl2=pointSceneCoherence_fetchPoints(sFile);
 io_progress(0.1);
 func=pointSceneCoherence(pl1,pl2);
 fp=fopen(outFile);
