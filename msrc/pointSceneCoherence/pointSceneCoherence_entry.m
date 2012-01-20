@@ -7,13 +7,17 @@ function pointSceneCoherence_entry( )
 %    Reference:   
 
 %inFile=char(input(''));
-inFile=io_getfile('*.urw','Please choose the corred image');
-outFile=char(input(''));
-sFile=io_getfile('*.urw','Please choose the sample image');
+inFile='C:\Users\acer\Desktop\ct_right_centre.urw';
+%outFile=char(input(''));
+outFile='E:\ElseIf\try.urw';
+%sFile=io_getfile('*.urw','Please choose the sample image');
+sFile='C:\Users\acer\Desktop\mr_centre.urw';
+%tol=io_prompt(2,'Tolerance exmamining points');
+tol=2;
 pl1=pointSceneCoherence_fetchPoints(inFile);
 pl2=pointSceneCoherence_fetchPoints(sFile);
 io_progress(0.1);
-func=pointSceneCoherence(pl1,pl2)
+func=pointSceneCoherence(pl1,pl2,tol)
 fp=fopen(outFile,'w');
 fwrite(fp,uint8(zeros(1,5)),'uint8');
 fwrite(fp,func);
