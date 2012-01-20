@@ -10,7 +10,6 @@ tol=tol*tol;
 
 len1=length(plist1);
 len2=length(plist2);
-count=0;
 func='';
 
 % brutal force point selection
@@ -19,69 +18,57 @@ comb2=combntns(1:len2,4);
 clen1=length(comb1);
 clen2=length(comb2);
 
-sel1=1;
-sel2=1;
-
 minLen=min([len1 len2]);
 maxLen=max([len1 len2]);
 leastCount=3*minLen-2*maxLen;
-maxCount=0;
+resCount=0;
 resList1=[];
 resList2=[];
-while true
     % select points
-    pl1=plist1(comb1(sel1,:));
-    pl2=plist2(comb2(sel2,:));
-    sel1=sel1+1;
-    clist1=[];
-    clist2=[];
-    count=0;
-    % get a transformation function
-    [a,b,c,d,e,f,g,h,i,j,k,l,err]=pointSceneCoherence_transfunc(pl1,pl2);
-    if(err>0)
-        if(bitand(err,1))
-            sel1=sel1+1;
-        end
-        if(bitand(err,2))
-            sel2=sel2+1;
-        end        
-        continue;
-    end
-    
-    if(sel1>clen1)
-        sel1=1;
-        sel2=sel2+1;
-    end
-    if(sel2>clen2)
-        break;
-    end
-    % check if this one works
-    % io_progress(0.1+0.8*double(sel2)/double(clen2));
-    for m=1:len1
-        X=a*plist1(m).x+b*plist1(m).y+c*plist1(m).z+d;
-        Y=e*plist1(m).x+f*plist1(m).y+g*plist1(m).z+h;
-        Z=i*plist1(m).x+j*plist1(m).y+k*plist1(m).z+l;
-        for n=1:len2
-            dist=(X-plist2(n).x)^2+(Y-plist2(n).y)^2+(Z-plist2(n).z)^2;
-            if dist<tol
-                count=count+1;
-                clist1=cat(1,clist1,plist1(m));
-                clist2=cat(1,clist2,plist2(n));
+    for sel1=1:clen1
+        pl1=plist1(comb1(sel1,:));
+        for sel2=1:clen2
+            pl2=plist2(comb2(sel2,:));
+            clist1=[];
+            clist2=[];
+            count=0;
+            % get a transformation function
+            [a,b,c,d,e,f,g,h,i,j,k,l,bad]=pointSceneCoherence_transfunc(pl1,pl2);
+            if(err>0)
+                if(bitand(bad,1))
+                    break;
+                end
+                if(bitand(bad,2))
+                    continue;
+                end
+            end
+            % check if this one works
+            for m=1:len1
+                X=a*plist1(m).x+b*plist1(m).y+c*plist1(m).z+d;
+                Y=e*plist1(m).x+f*plist1(m).y+g*plist1(m).z+h;
+                Z=i*plist1(m).x+j*plist1(m).y+k*plist1(m).z+l;
+                for n=1:len2
+                    dist=(X-plist2(n).x)^2+(Y-plist2(n).y)^2+(Z-plist2(n).z)^2;
+                    if dist<tol
+                        count=count+1;
+                        clist1=cat(1,clist1,plist1(m));
+                        clist2=cat(1,clist2,plist2(n));
+                        break;
+                    end
+                end
+            end
+            if(count>resCount)
+                resList1=clist1;
+                resList2=clist2;
+                resCount=count;
+            end
+            if(count>leastCount)
                 break;
             end
         end
     end
-    if(count>maxCount)
-        resList1=clist1;
-        resList2=clist2;
-        maxCount=count;
-    end
-    if(count>leastCount)
-        break;
-    end
-end
 % get a better transformation function using the corresponded points
-count=maxCount;
+count=resCount;
 sprintf('good %d/%d',count,len1)
 clist1=resList1;
 clist2=resList2;
@@ -95,8 +82,8 @@ a=0;b=0;c=0;d=0;e=0;f=0;g=0;h=0;i=0;j=0;k=0;l=0;
 n=0;
 io_progress(0.9);
 for m=1:len
-    [a2,b2,c2,d2,e2,f2,g2,h2,i2,j2,k2,l2,ok]=pointSceneCoherence_transfunc(clist1(comb(m,:)),clist2(comb(m,:)));
-    if(ok)
+    [a2,b2,c2,d2,e2,f2,g2,h2,i2,j2,k2,l2,bad]=pointSceneCoherence_transfunc(clist1(comb(m,:)),clist2(comb(m,:)));
+    if(bad)
         continue;
     end
     n=n+1;
