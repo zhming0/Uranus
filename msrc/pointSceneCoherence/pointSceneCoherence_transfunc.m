@@ -17,7 +17,7 @@ v2=[pointList1(2).x pointList1(2).y pointList1(2).z]-v1;
 v3=[pointList1(3).x pointList1(3).y pointList1(3).z]-v1;
 v4=[pointList1(4).x pointList1(4).y pointList1(4).z]-v1;
 am=dot(v2,cross(v3,v4));
-if(abs(am)<0.0001)
+if(abs(am)<0.001)
     bad=1;
 end
 v1=[pointList2(1).x pointList2(1).y pointList2(1).z];
@@ -25,7 +25,7 @@ v2=[pointList2(2).x pointList2(2).y pointList2(2).z]-v1;
 v3=[pointList2(3).x pointList2(3).y pointList2(3).z]-v1;
 v4=[pointList2(4).x pointList2(4).y pointList2(4).z]-v1;
 am=dot(v2,cross(v3,v4));
-if(abs(am)<0.0001)
+if(abs(am)<0.001)
     bad=bad+2;
 end
 if(bad>0)
