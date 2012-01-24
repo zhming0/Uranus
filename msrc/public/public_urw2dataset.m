@@ -5,7 +5,6 @@ function [dataset,pixelSize] = public_urw2dataset(filename)
 %    Author:    Tsenmu
 %    Date:    2012.01.12
 %    Reference:    
-
     fid = fopen(filename, 'r');
     vec = fread(fid,  2, 'uint16');
     c = vec(1); r = vec(2);

@@ -5,7 +5,6 @@ function [tform] = public_urw2tform(filename)
 %    Author:    Tsenmu
 %    Date:    2012.01.24
 %    Reference:    
-
     fid = fopen(filename, 'r');
     fread(fid, 5, 'uint8');
     tform = double(fread(fid, [4 4]));

@@ -5,9 +5,7 @@ function path = io_getfile( fileType , title )
 %    Author:    Davidaq
 %    Date:    2012.1.14
 %    Reference:
-
     [fname,dir]=uigetfile(fileType,title);
     path=strcat(dir,fname);
-
 end
 
