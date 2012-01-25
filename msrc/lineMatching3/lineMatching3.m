@@ -14,6 +14,7 @@ function [result] = lineMatching3(dataset1, pixeldist1, dataset2, pixeldist2, ar
     [num_B, ~] = size(line_B); 
     lineAngle_A = zeros(num_A, 2);
     lineAngle_B = zeros(num_B, 2);
+    [num_A num_B]
     
     %Notice the degree will be more than original by one!
     
@@ -44,6 +45,8 @@ function [result] = lineMatching3(dataset1, pixeldist1, dataset2, pixeldist2, ar
         end
     end
     
+    %[hor_angle, ele_angle]
+    
     tmp = -1;
     for i = 1:180
         for j = 1:91
@@ -70,10 +73,12 @@ function [result] = lineMatching3(dataset1, pixeldist1, dataset2, pixeldist2, ar
             [S R tx ty tz] = lineMatching3_findParameter(line_A(indexofA, :), line_B(i, :), hor_angle, ele_angle, mostangle_A(: ,1));
             T = [tx; ty; tz];
             tmp = lineMatching3_calcLikelihood(line_A, line_B, S, R, T);
+            tmp
             if tmp > likelihood
                 likelihood = tmp;
                 result = [R.*S , T; 0 0 0 1;];
             end
         end
     end
+    io_progress(1.0);
 end

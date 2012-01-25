@@ -16,10 +16,10 @@ function [ ] = lineMatching3_entry( )
     pixeldist1 = [1; 1; 1;];
     pixeldist2 = [1; 1; 1;];
     
-    arg1 = io_prompt(5, 'Set argument. Better to be the same with last procedure');
-    arg2 = io_prompt(5, 'Set argument. Better to be the same with last procedure');
+    arg1 = io_prompt(20, 'Set argument for fisrt dataset. Better to be the same with last procedure');
+    arg2 = io_prompt(20, 'Set argument for second. Better to be the same with last procedure');
     
     result = lineMatching3(dataset1, pixeldist1', dataset2, pixeldist2', arg1, arg2);
-    %result
+    result
     public_tform2urw(outFile, result);
 end

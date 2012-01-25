@@ -9,7 +9,7 @@ function [ ] = linearFitting3_entry(  )
     inputFile = char(input(''));
     outputFile = char(input(''));
     
-    arg = int32(io_prompt(5,'Input an integer'));
+    arg = int32(io_prompt(15,'Input the block size of fitting(15 is recommended.):'));
     [dataset pixel] = public_urw2dataset(inputFile);
     result = linearFitting3_lineSelection3(dataset, arg);
     public_dataset2urw(outputFile, result, pixel);
