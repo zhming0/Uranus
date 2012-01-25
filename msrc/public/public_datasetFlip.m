@@ -1,4 +1,4 @@
-function [ds_r, ps_r] = public_datasetFlip(ds_in, ps_in, orientation
+function [ds_r, ps_r] = public_datasetFlip(ds_in, ps_in, orientation)
 %PUBLIC_DATASETROTATE    The function flips the dataset.
 %    Input:    Dataset and pixel size and orientation, where the
 %              orientation can be 'updown', 'leftright', 'updown'.
