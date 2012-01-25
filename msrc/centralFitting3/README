@@ -1,5 +1,7 @@
 CentralFitting3 is a function with which you will get a central axis of MRI or CT.
 
+Use edgeFilter3 to obtain the edge first!
+
 Some mathmatical tricks are used in adjusting images to a balanced histogram.
 
 Besides, some morphological tools are used to select setios.
