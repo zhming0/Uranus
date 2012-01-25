@@ -54,7 +54,8 @@ function [] = public_dicomrewrite(sourceDir, targetDir, WindowSelection)
 		imwrite(img, nfilename, 'png');
 		end
 	cd ..
-	end
+    end
+end
 	
 	
 	
