@@ -1,5 +1,5 @@
 function [tform] = public_urw2tform(filename)
-%PUBLIC_URW2DATASET    Translate urw files into a transform matrix 
+%PUBLIC_URW2TFORM    Translate urw files into a transform matrix 
 %    Input:    A urw file.
 %    Output:    A 4 * 4 transform matrix.
 %    Author:    Tsenmu
