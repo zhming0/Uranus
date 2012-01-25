@@ -6,12 +6,12 @@ function pointSceneCoherence_entry( )
 %    Date:    2012.01.19
 %    Reference:   
 
-%inFile=char(input(''));
-inFile='C:\Users\acer\Desktop\ct_right_centre.urw';
-%outFile=char(input(''));
-outFile='E:\ElseIf\try.urw';
-%sFile=io_getfile('*.urw','Please choose the sample image');
-sFile='C:\Users\acer\Desktop\mr_centre.urw';
+inFile=char(input(''));
+%inFile='C:\Users\acer\Desktop\ct_right_centre.urw';
+outFile=char(input(''));
+%outFile='E:\ElseIf\try.urw';
+sFile=io_getfile('*.urw','Please choose the sample image');
+%sFile='C:\Users\acer\Desktop\mr_centre.urw';
 pl1=pointSceneCoherence_fetchPoints(inFile);
 [pl2,dataset,ps]=pointSceneCoherence_fetchPoints(sFile);
 io_progress(0.1);
