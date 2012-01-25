@@ -40,15 +40,16 @@ resList2=[];
         clist2=[];
         count=0;
         % get a transformation function
-        [a,b,c,d,e,f,g,h,i,j,k,l,bad]=pointSceneCoherence_transfunc(pl1,pl2);
+        [matrix,bad]=pointSceneCoherence_transfunc(pl1,pl2);
         if(bad)
             continue;
         end
         % check if this one works
         for m=1:len1
-            X=a*plist1(m).x+b*plist1(m).y+c*plist1(m).z+d;
-            Y=e*plist1(m).x+f*plist1(m).y+g*plist1(m).z+h;
-            Z=i*plist1(m).x+j*plist1(m).y+k*plist1(m).z+l;
+            vert=matrix*[plist1(m).x;plist1(m).y;plist1(m).z;1];
+            X=vert(1,1);
+            Y=vert(2,1);
+            Z=vert(3,1);
             X=uint32(X/ps(1)+0.5);
             Y=uint32(Y/ps(2)+0.5);
             Z=uint32(Z/ps(3)+0.5);
@@ -112,29 +113,18 @@ end
 perm=randperm(count);
 comb=nchoosek(perm(1:len),4);
 len=length(comb);
-a=0;b=0;c=0;d=0;e=0;f=0;g=0;h=0;i=0;j=0;k=0;l=0;
+final=zeros(4);
 n=0;
 io_progress(0.9);
 for m=1:len
-    [a2,b2,c2,d2,e2,f2,g2,h2,i2,j2,k2,l2,bad]=pointSceneCoherence_transfunc(clist1(comb(m,:)),clist2(comb(m,:)));
+    [matrix,bad]=pointSceneCoherence_transfunc(clist1(comb(m,:)),clist2(comb(m,:)));
     if(bad)
         continue;
     end
     n=n+1;
-    a=a+(a2-a)/n;
-    b=b+(b2-b)/n;
-    c=c+(c2-c)/n;
-    d=d+(d2-d)/n;
-    e=e+(e2-e)/n;
-    f=f+(f2-f)/n;
-    g=g+(g2-g)/n;
-    h=h+(h2-h)/n;
-    i=i+(i2-i)/n;
-    j=j+(j2-j)/n;
-    k=k+(k2-k)/n;
-    l=l+(l2-l)/n;
+    final=final+(final-matrix)/n;
 end
 
-func=sprintf('X=%f*x+%f*y+%f*z+%f;%cY=%f*x+%f*y+%f*z+%f;%cZ=%f*x+%f*y+%f*z+%f;',a,b,c,d,10,e,f,g,h,10,i,j,k,l);
+func=final;
 
 end
