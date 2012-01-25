@@ -1,4 +1,11 @@
 function [ds_r, ps_r] = public_datasetFlip(ds_in, ps_in, orientation)
+%PUBLIC_DATASETFLIP    The function flip the dataset.
+%    Input:    Dataset and pixel size and orientation, where the
+%              orientation can be 'left', 'right', 'up' and 'down'.
+%    Output:    Dataset and pixel size.
+%    Author:    Tsenmu
+%    Date:    2012.01.25
+%    Reference:    
     ps_r = ps_in;
     ds_in = squeeze(ds_in);
     [r c h] = size(ds_in);
