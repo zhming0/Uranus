@@ -20,6 +20,6 @@ function [ ] = lineMatching3_entry( )
     arg2 = io_prompt(5, 'Set argument. Better to be the same with last procedure');
     
     result = lineMatching3(dataset1, pixeldist1', dataset2, pixeldist2', arg1, arg2);
-    result
+    %result
     public_tform2urw(outFile, result);
 end

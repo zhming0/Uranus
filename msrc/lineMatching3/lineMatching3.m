@@ -72,7 +72,7 @@ function [result] = lineMatching3(dataset1, pixeldist1, dataset2, pixeldist2, ar
             tmp = lineMatching3_calcLikelihood(line_A, line_B, S, R, T);
             if tmp > likelihood
                 likelihood = tmp;
-                result = [0 0 0 1;R.*S , T;];
+                result = [R.*S , T; 0 0 0 1;];
             end
         end
     end
