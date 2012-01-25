@@ -8,8 +8,10 @@ function [out_dataset, out_ps] = resample3(in_dataset, in_ps, B_size, tform)
 %    Reference:    
     out_ps = in_ps;
     out_r = B_size(1); out_c = B_size(2); out_h = B_size(4);
-    T = maketform('affine', tform);
+    T = maketform('affine', tform');
     R = makeresampler('cubic', 'fill');
-    out_dataset = uint8(tformarray(in_dataset, T, R, [1 2 4], [1 2 4], [out_r, out_c, 1, out_h], [], []));
+    in_dataset = squeeze(in_dataset);
+    out_ds = uint8(tformarray(double(in_dataset), T, R, [1 2 3], [1 2 3], [out_r, out_c, out_h], [], []));
+    out_dataset = public_expand(out_ds);
     prog = 0.50; io_progress(prog);
 end
