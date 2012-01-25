@@ -16,10 +16,8 @@ pl1=pointSceneCoherence_fetchPoints(inFile);
 [pl2,dataset,ps]=pointSceneCoherence_fetchPoints(sFile);
 io_progress(0.1);
 func=pointSceneCoherence(pl1,pl2,dataset,ps)
-fp=fopen(outFile,'w');
-fwrite(fp,uint8(zeros(1,5)),'uint8');
-fwrite(fp,func);
-fclose(fp);
+func=[func;0,0,0,1];
+public_generateTformUrw(outFile,func);
 io_progress(1);
 
 end

@@ -11,19 +11,9 @@ len1=length(plist1);
 len2=length(plist2);
 func='';
 
-% random point selection
-clen=min([len1 len2]);
-max=10000;
-perm1=randperm(clen);
-perm2=randperm(clen);
-
-if(clen>25)
-    lll=25;
-else
-    lll=clen;
-end
-comb=combntns(1:lll,4);
-clen=length(comb);
+% point selection
+pairs = pointSceneCoherence_select( len1 , len2 , 10000 );
+clen=length(pairs);
 
 resCount=0;
 resList1=[];
@@ -31,9 +21,8 @@ resList2=[];
     % select points
     for sel=1:clen
         io_progress(0.1+0.75*double(sel)/double(clen));
-        cb=comb(sel,:);
-        pl1=plist1(perm1(cb));
-        pl2=plist2(perm2(cb));
+        pl1=plist1(pairs(sel,1:4));
+        pl2=plist2(pairs(sel,5:8));
         clist1=[];
         clist2=[];
         count=0;
@@ -111,7 +100,7 @@ end
 perm=randperm(count);
 comb=nchoosek(perm(1:len),4);
 len=length(comb);
-final=zeros(4);
+final=zeros(3,4);
 n=0;
 io_progress(0.9);
 for m=1:len
