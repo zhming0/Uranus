@@ -14,8 +14,6 @@ func='';
 % random point selection
 clen=min([len1 len2]);
 max=10000;
-perm1=[];
-perm2=[];
 perm1=randperm(clen);
 perm2=randperm(clen);
 

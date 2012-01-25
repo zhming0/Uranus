@@ -7,7 +7,7 @@ function [pointList,dataset,ps] = pointSceneCoherence_fetchPoints( inFile )
 %    Reference:   
 
 [dataset,ps]=public_urw2dataset(inFile);
-[c,r,t,h]=size(dataset);
+[c,r,~,h]=size(dataset);
 pointList=[];
 for z=1:h
     for x=1:c
