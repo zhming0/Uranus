@@ -8,4 +8,5 @@ function [] = public_datasetGrid_entry()
     io_progress(0.5);
     public_dataset2urw(outFileName, ds_in, ps_in);
     io_progress(1.0);
+%         [0.4972   -0.2722   -0.5375  138.1875;0.2889   -0.6889   -0.1000  174.5000;  0.9806    1.0944    0.9875 -272.4375]
 end
