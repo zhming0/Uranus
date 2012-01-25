@@ -6,18 +6,18 @@ function [result] = lineMatching3_calcLikelihood(linesetA, linesetB, S, R, T)
 %    Author:    mjzshd
 %    Date:    2012.01.17
 %    Reference:
-    [num_A tmp] = size(line_A);
-    [num_B tmp] = size(line_B);
+    [num_A tmp] = size(linesetA);
+    [num_B tmp] = size(linesetB);
     midB = zeros(num_B, 3);
     for i = 1:num_B
         tmpA = linesetB(i, 1:3);
         tmpB = linesetB(i, 4:6);
-        midB(i) = (tmpA + tmpB)./2;
+        midB(i, :) = (tmpA + tmpB)./2;
     end
     num_ok = 0;
     for i = 1:num_B
-        midB(i) = (S*R*(midB(i)'))' + T;
-        mid = midB(i)';
+        midB(i, :) = ((R*(midB(i, :)')).*S) + T;
+        mid = midB(i, :)';
         for j = 1:num_A
             tmpA = linesetA(i, 1:3)';
             tmpB = linesetB(i, 4:6)';
