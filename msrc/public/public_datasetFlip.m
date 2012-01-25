@@ -1,7 +1,8 @@
 function [ds_r, ps_r] = public_datasetFlip(ds_in, ps_in, orientation)
 %PUBLIC_DATASETFLIP    The function flip the dataset.
 %    Input:    Dataset and pixel size and orientation, where the
-%              orientation can be 'left', 'right', 'up' and 'down'.
+%              orientation can be 'left', 'right', 'up', 'down', 'cw'
+%              and 'ccw'.
 %    Output:    Dataset and pixel size.
 %    Author:    Tsenmu
 %    Date:    2012.01.25
@@ -15,7 +16,7 @@ function [ds_r, ps_r] = public_datasetFlip(ds_in, ps_in, orientation)
             for ri = 1 : r
                 for ci = 1 : c
                     for z = 1 : h
-                        ds_r(z, ci, ri) = ps_in(ri, ci, z);
+                        ds_r(z, ci, ri) = ds_in(ri, ci, z);
                     end
                 end
             end
@@ -24,7 +25,7 @@ function [ds_r, ps_r] = public_datasetFlip(ds_in, ps_in, orientation)
             for ri = 1 : r
                 for ci = 1 : c
                     for z = 1 : h
-                        ds_r(z, ci, r - ri + 1) = ps_in(ri, ci, z);
+                        ds_r(z, ci, r - ri + 1) = ds_in(ri, ci, z);
                     end
                 end
             end
@@ -33,7 +34,7 @@ function [ds_r, ps_r] = public_datasetFlip(ds_in, ps_in, orientation)
             for ri = 1 : r
                 for ci = 1 : c
                     for z = 1 : h
-                        ds_r(c - ci + 1, ri, z) = ps_in(ri, ci, z);
+                        ds_r(c - ci + 1, ri, z) = ds_in(ri, ci, z);
                     end
                 end
             end
@@ -42,7 +43,25 @@ function [ds_r, ps_r] = public_datasetFlip(ds_in, ps_in, orientation)
             for ri = 1 : r
                 for ci = 1 : c
                     for z = 1 : h
-                        ds_r(ci, r - ri + 1, z) = ps_in(ri, ci, z);
+                        ds_r(ci, r - ri + 1, z) = ds_in(ri, ci, z);
+                    end
+                end
+            end
+        case 'cw'
+            ds_r = uint8(zeros([r, h, c]));
+            for ri = 1 : r
+                for ci = 1 : c
+                    for z = 1 : h
+                        ds_r(ri, z, c - ci + 1) = ds_in(ri, ci, z);
+                    end
+                end
+            end
+        case 'ccw'
+            ds_r = uint8(zeros([r, h, c]));
+            for ri = 1 : r
+                for ci = 1 : c
+                    for z = 1 : h
+                        ds_r(ri, z, ci) = ds_in(ri, ci, z);
                     end
                 end
             end
