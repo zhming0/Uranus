@@ -1,6 +1,6 @@
 function [res, level] = edgeFilter3_histeq(img, level)
     if nargin == 1
-        level = centralFitting3_histeq_findLevel(img);
+        level = edgeFilter3_histeq_findLevel(img);
     end
     [r c] = size(img);
     mask = false(r, c);
