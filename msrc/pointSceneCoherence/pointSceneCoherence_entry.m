@@ -17,7 +17,7 @@ pl1=pointSceneCoherence_fetchPoints(inFile);
 io_progress(0.1);
 func=pointSceneCoherence(pl1,pl2,dataset,ps)
 func=[func;0,0,0,1];
-public_generateTformUrw(outFile,func);
+public_tform2urw(outFile,func);
 io_progress(1);
 
 end

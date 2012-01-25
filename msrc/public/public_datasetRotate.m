@@ -1,8 +1,9 @@
-function [ds_r, ps_r] = public_datasetFlip(ds_in, ps_in, orientation)
-%PUBLIC_DATASETFLIP    The function flip the dataset.
+function [ds_r, ps_r] = public_datasetRotate(ds_in, ps_in, orientation)
+%PUBLIC_DATASETFLIP    The function rotate the dataset.
 %    Input:    Dataset and pixel size and orientation, where the
 %              orientation can be 'left', 'right', 'up', 'down', 'cw'
-%              and 'ccw'.
+%              and 'ccw'. (Assume that you are watching in front of 
+%              dataset.)
 %    Output:    Dataset and pixel size.
 %    Author:    Tsenmu
 %    Date:    2012.01.25
