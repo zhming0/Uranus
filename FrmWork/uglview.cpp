@@ -6,6 +6,7 @@
 #include <QTextCodec>
 #include <QLabel>
 #include <QDebug>
+#include <math.h>
 UGLView::UGLView(QWidget *parent) :
     QGLWidget(parent)
 {
@@ -172,8 +173,8 @@ public:
                             }
                             const static int SHAKE=1000;
                             float rd=(qrand()%SHAKE/1.0f)/SHAKE;
-                            coord[vSize*3]=_w*(i/h+rd/10)-1;
-                            coord[vSize*3+1]=_h*(i%h+rd/10)-1;
+                            coord[vSize*3]=_h*(i%h+rd/10)-1;
+                            coord[vSize*3+1]=_w*(i/h+rd/10)-1;
                             coord[vSize*3+2]=inc*(z+rd)-1;
 
                             color[vSize*4]=0.1+0.9*col;
@@ -253,21 +254,28 @@ void UGLView::setLighten(bool b)
     lighten=b;
 }
 
-inline bool getPoint(QString& s,int& x, int& y,int& z)
+inline bool getPoint(QString& s,float& x, float& y,float& z,float *d=0)
 {
     QStringList l=s.split(',');
-    if(l.count()<3)
+    int c=(d==0)?3:4;
+    if(l.count()<c)
         return false;
     bool ok;
-    x=l[0].toUInt(&ok);
+    x=l[0].toFloat(&ok);
     if(!ok)
         return false;
-    y=l[1].toUInt(&ok);
+    y=l[1].toFloat(&ok);
     if(!ok)
         return false;
-    z=l[2].toUInt(&ok);
+    z=l[2].toFloat(&ok);
     if(!ok)
         return false;
+    if(d!=0)
+    {
+        *d=l[3].toFloat(&ok);
+        if(!ok)
+            *d=0;
+    }
     return true;
 }
 
@@ -322,8 +330,8 @@ void UGLView::paintGL()
         glVertex3f(-1,1,-1);
         glEnd();
     }
-    //glPushMatrix();
-    //glLoadIdentity();
+//    glPushMatrix();
+//    glLoadIdentity();
 //    float zm=2/zoom;
 //    glBegin(GL_POLYGON);
 //    glColor4f(0.5,0.5,0.5,1);
@@ -332,7 +340,7 @@ void UGLView::paintGL()
 //    glVertex3f(zm,zm,0);
 //    glVertex3f(zm,-zm,0);
 //    glEnd();
-    //glPopMatrix();
+//    glPopMatrix();
 //    glDepthMask(GL_FALSE);
     glPointSize(2*(psize*zoom+pzoom));
     foreach(QString item,hints)
@@ -347,11 +355,70 @@ void UGLView::paintGL()
             continue;
         QColor color(cl);
         glColor4f(color.red()/255.0,color.green()/255.0,color.blue()/255.0,1.0);
-        int x=0,y=0,z=0,x2=0,y2=0,z2=0;
+        float x=0,y=0,z=0,x2=0,y2=0,z2=0;
         switch(c)
         {
         case 2:
-            if(getPoint(l[1],x,y,z))
+            if(getPoint(l[1],x,y,z,&x2))
+            {   //ax+by+cz+d=0
+                glColor4f(color.red()/255.0,color.green()/255.0,color.blue()/255.0,0.5);
+                float a=x,b=y,c=z,d=x2;
+                y=-d/b*_dy-1;
+                z=-d/c*_dz-1;
+                glBegin(GL_TRIANGLE_STRIP);
+                if(a!=0)
+                {
+                    y=2/_dy;
+                    z=2/_dz;
+                    x=-d/a*_dx-1;
+                    if(x>-1&&x<1)
+                        glVertex3f(x,-1,-1);
+                    x=(-d-b*y)/a*_dx-1;
+                    if(x>-1&&x<1)
+                        glVertex3f(x,1,-1);
+                    x=(-d-c*z)/a*_dx-1;
+                    if(x>-1&&x<1)
+                        glVertex3f(x,-1,1);
+                    x=(-d-b*y-c*z)/a*_dx-1;
+                    if(x>-1&&x<1)
+                        glVertex3f(x,1,1);
+                }
+                if(b!=0)
+                {
+                    x=2/_dx;
+                    z=2/_dz;
+                    y=-d/b*_dy-1;
+                    if(y>-1&&y<1)
+                        glVertex3f(-1,y,-1);
+                    y=(-d-a*x)/b*_dy-1;
+                    if(y>-1&&y<1)
+                        glVertex3f(1,y,-1);
+                    y=(-d-c*z)/b*_dy-1;
+                    if(y>-1&&y<1)
+                        glVertex3f(-1,y,1);
+                    y=(-d-a*x-c*z)/b*_dy-1;
+                    if(y>-1&&y<1)
+                        glVertex3f(1,y,1);
+                }
+                if(c!=0)
+                {
+                    x=2/_dx;
+                    y=2/_dy;
+                    z=-d/c*_dz-1;
+                    if(z>-1&&z<1)
+                        glVertex3f(-1,-1,z);
+                    z=(-d-a*x)/c*_dz-1;
+                    if(z>-1&&z<1)
+                        glVertex3f(1,-1,z);
+                    z=(-d-b*y)/c*_dz-1;
+                    if(z>-1&&z<1)
+                        glVertex3f(-1,1,z);
+                    z=(-d-a*x-b*y)/c*_dz-1;
+                    if(z>-1&&z<1)
+                        glVertex3f(1,1,z);
+                }
+                glEnd();
+            }else if(getPoint(l[1],x,y,z))
             {
                 glBegin(GL_POINTS);
                 glVertex3f(x*_dx-1,y*_dy-1,z*_dz-1);
@@ -385,7 +452,6 @@ void UGLView::paintGL()
         {
             glCallList(listBase+i);
         }
-//    glDepthMask(GL_TRUE);
     glPopMatrix();
 }
 
