@@ -24,9 +24,9 @@ void UGLView::initializeGL()
 {
     glEnable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE_2D);
+    //glEnable(GL_TEXTURE_2D);
     glClearColor(0,0,0,0);
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
     listBase=glGenLists(2);
@@ -177,7 +177,7 @@ public:
                             coord[vSize*3+1]=_h*(i%h+rd/10)-1;
                             coord[vSize*3+2]=inc*(z+rd)-1;
 
-                            color[vSize*4]=0.3+0.7*col;
+                            color[vSize*4]=0.4+0.6*col;
                             color[vSize*4+1]=0.05+0.95*col;
                             color[vSize*4+2]=0.05+0.95*col;
                             if(!mono)
@@ -274,7 +274,7 @@ inline bool getPoint(QString& s,int& x, int& y,int& z)
 
 void UGLView::paintGL()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     bool raw=false;
     if(!opening&&!vertexCoord.empty())
     {
@@ -319,6 +319,18 @@ void UGLView::paintGL()
         glVertex3f(-1,1,-1);
         glEnd();
     }
+    //glPushMatrix();
+    //glLoadIdentity();
+//    float zm=2/zoom;
+//    glBegin(GL_POLYGON);
+//    glColor4f(0.5,0.5,0.5,1);
+//    glVertex3f(-zm,-zm,0);
+//    glVertex3f(-zm,zm,0);
+//    glVertex3f(zm,zm,0);
+//    glVertex3f(zm,-zm,0);
+//    glEnd();
+    //glPopMatrix();
+//    glDepthMask(GL_FALSE);
     glPointSize(2*(psize*zoom+pzoom));
     foreach(QString item,hints)
     {
@@ -370,6 +382,7 @@ void UGLView::paintGL()
         {
             glCallList(listBase+i);
         }
+//    glDepthMask(GL_TRUE);
     glPopMatrix();
 }
 
