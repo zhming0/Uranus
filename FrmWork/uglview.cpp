@@ -95,7 +95,6 @@ public:
             v->dispStr="";
             if(len==0)
             {
-                qDebug()<<"func";
                 if(f.atEnd())
                 {
                     f.close();
@@ -136,8 +135,8 @@ public:
             bool mono=(min==max);
             if(mono)
                 min=0;
-            if(min>100)
-                min=100;
+            if(min>50)
+                min=50;
             v->status="Analyzing data";
             int c=box.count();
 
@@ -177,9 +176,12 @@ public:
                             coord[vSize*3]=_w*(i/h+rd/10)-1;
                             coord[vSize*3+1]=_h*(i%h+rd/10)-1;
                             coord[vSize*3+2]=inc*(z+rd)-1;
-                            color[vSize*4]=color[vSize*4+1]=color[vSize*4+2]=1;
+
+                            color[vSize*4]=0.3+0.7*col;
+                            color[vSize*4+1]=0.05+0.95*col;
+                            color[vSize*4+2]=0.05+0.95*col;
                             if(!mono)
-                                col=col*inc*0.7;
+                                col=col*inc*0.9;
                             else
                                 col*=0.1;
                             if(col>1)
@@ -241,6 +243,7 @@ void UGLView::doneReading()
         float r1=(float)w/width(),r2=(float)h/height();
         zoom=(r1>r2)?r2:r1;
         zoom=zoom*0.9;
+        zzoom=1;
         resizeGL(width(),height());
         updateGL();
     }
@@ -279,7 +282,7 @@ void UGLView::paintGL()
     }else
         raw=view();
     glPushMatrix();
-    glScalef(zoom,zoom,zoom);
+    glScalef(zoom,zoom,zoom*zzoom);
     if(showFrame)
     {
         glBegin(GL_LINES);
@@ -361,11 +364,7 @@ void UGLView::paintGL()
 
     int n=1;
     if(lighten)
-        n+=5;
-    if(listLen<10)
-    {
-        n+=(10-listLen)/5;
-    }
+        n+=3;
     while(n--)
         for(uint i=0;i<listLen;i++)
         {
@@ -451,8 +450,16 @@ void UGLView::wheelEvent(QWheelEvent *e)
             pzoom+=0.1;
         else
             pzoom-=0.1;
-        if(pzoom<-0.9)
-            pzoom=-0.9;
+        if(pzoom<-1)
+            pzoom=-1;
+    }else if(e->modifiers()&Qt::AltModifier)
+    {
+        if(d>0)
+            zzoom+=0.1;
+        else
+            zzoom-=0.1;
+        if(zzoom<0.1)
+            zzoom=0.1;
     }else
     {
         if(d>0)

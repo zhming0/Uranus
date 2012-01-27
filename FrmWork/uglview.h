@@ -45,7 +45,7 @@ private:
     int w,h,sw,sh;
     QPoint prev,curr;
     GLuint listBase,listLen;
-    GLfloat psize,pzoom,zoom;
+    GLfloat psize,pzoom,zoom,zzoom;
     bool view();
     QVector<float*> vertexCoord,vertexColor;
     int vertexLastSize;
