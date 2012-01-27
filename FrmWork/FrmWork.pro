@@ -18,7 +18,9 @@ SOURCES += main.cpp\
     uprocessitem.cpp \
     uprocessitemmodify.cpp \
     sharedmemory.cpp \
-    progressdlg.cpp
+    progressdlg.cpp \
+    hinthelper.cpp \
+    hintdlg.cpp
 
 HEADERS  += mainwindow.h \
     uglview.h \
@@ -27,12 +29,16 @@ HEADERS  += mainwindow.h \
     uprocessitem.h \
     uprocessitemmodify.h \
     sharedmemory.h \
-    progressdlg.h
+    progressdlg.h \
+    hinthelper.h \
+    hintdlg.h
 
 FORMS    += mainwindow.ui \
     processtool.ui \
     uprocessitemmodify.ui \
-    progressdlg.ui
+    progressdlg.ui \
+    hinthelper.ui \
+    hintdlg.ui
 
 RESOURCES += \
     res.qrc

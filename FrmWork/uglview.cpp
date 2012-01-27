@@ -5,14 +5,19 @@
 #include <QMessageBox>
 #include <QTextCodec>
 #include <QLabel>
+#include <QDebug>
 UGLView::UGLView(QWidget *parent) :
     QGLWidget(parent)
 {
     openFile="";
     opening=false;
+    showFrame=false;
     down=false;
     listLen=0;
     lighten=false;
+    _dx=0;
+    _dy=0;
+    _dz=0;
 }
 
 void UGLView::initializeGL()
@@ -141,6 +146,9 @@ public:
                   _h=(float)2/h,
                   inc=2.0f/box.count();
 
+            v->_dx=_w;
+            v->_dy=_h;
+            v->_dz=inc;
             int &vSize=v->vertexLastSize;
             vSize=vertexListMax+1;
             float *coord,*color;
@@ -232,6 +240,7 @@ void UGLView::doneReading()
         show();
         float r1=(float)w/width(),r2=(float)h/height();
         zoom=(r1>r2)?r2:r1;
+        zoom=zoom*0.9;
         resizeGL(width(),height());
         updateGL();
     }
@@ -240,6 +249,24 @@ void UGLView::doneReading()
 void UGLView::setLighten(bool b)
 {
     lighten=b;
+}
+
+inline bool getPoint(QString& s,int& x, int& y,int& z)
+{
+    QStringList l=s.split(',');
+    if(l.count()<3)
+        return false;
+    bool ok;
+    x=l[0].toUInt(&ok);
+    if(!ok)
+        return false;
+    y=l[1].toUInt(&ok);
+    if(!ok)
+        return false;
+    z=l[2].toUInt(&ok);
+    if(!ok)
+        return false;
+    return true;
 }
 
 void UGLView::paintGL()
@@ -253,6 +280,77 @@ void UGLView::paintGL()
         raw=view();
     glPushMatrix();
     glScalef(zoom,zoom,zoom);
+    if(showFrame)
+    {
+        glBegin(GL_LINES);
+        glColor4f(1,0,0,0.6);
+        glVertex3f(-1,-1,-1);
+        glVertex3f(-1,-1,1);
+        glColor4f(0,1,0,0.6);
+        glVertex3f(-1,-1,-1);
+        glVertex3f(-1,1,-1);
+        glColor4f(0,0,1,0.6);
+        glVertex3f(-1,-1,-1);
+        glVertex3f(1,-1,-1);
+
+        glColor4f(1,1,1,0.6);
+        glVertex3f(1,-1,1);
+        glVertex3f(1,1,1);
+        glVertex3f(1,-1,1);
+        glVertex3f(1,-1,-1);
+        glVertex3f(1,-1,1);
+        glVertex3f(-1,-1,1);
+
+        glVertex3f(1,1,-1);
+        glVertex3f(1,1,1);
+        glVertex3f(1,1,-1);
+        glVertex3f(1,-1,-1);
+        glVertex3f(1,1,-1);
+        glVertex3f(-1,1,-1);
+
+        glVertex3f(-1,1,1);
+        glVertex3f(1,1,1);
+        glVertex3f(-1,1,1);
+        glVertex3f(-1,-1,1);
+        glVertex3f(-1,1,1);
+        glVertex3f(-1,1,-1);
+        glEnd();
+    }
+    glPointSize(2*(psize*zoom+pzoom));
+    foreach(QString item,hints)
+    {
+        QStringList l=item.split(';');
+        bool ok;
+        int c=l.count();
+        if(c<2)
+            continue;
+        uint cl=l[0].toUInt(&ok);
+        if(!ok)
+            continue;
+        QColor color(cl);
+        glColor4f(color.red()/255.0,color.green()/255.0,color.blue()/255.0,1.0);
+        int x=0,y=0,z=0,x2=0,y2=0,z2=0;
+        switch(c)
+        {
+        case 2:
+            if(getPoint(l[1],x,y,z))
+            {
+                glBegin(GL_POINTS);
+                glVertex3f(x*_dx-1,y*_dy-1,z*_dz-1);
+                glEnd();
+            }
+            break;
+        case 3:
+            if(getPoint(l[1],x,y,z)&&getPoint(l[2],x2,y2,z2))
+            {
+                glBegin(GL_LINES);
+                glVertex3f(x*_dx-1,y*_dy-1,z*_dz-1);
+                glVertex3f(x2*_dx-1,y2*_dy-1,z2*_dz-1);
+                glEnd();
+            }
+            break;
+        }
+    }
     glPointSize(psize*zoom+pzoom);
 
     static uint s=0;
@@ -401,4 +499,10 @@ bool UGLView::view()
         return true;
     }
     return false;
+}
+
+void UGLView::setHint(QStringList list)
+{
+    hints=list;
+    updateGL();
 }

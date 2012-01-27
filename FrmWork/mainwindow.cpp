@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->disp,SIGNAL(doneGenerating()),SLOT(doneOpening()));
     connect(ui->disp,SIGNAL(setLbl(QString)),SLOT(setLbl(QString)));
     connect(ui->processToolContent,SIGNAL(log(QString)),SLOT(dispLog(QString)));
+    connect(ui->hintContents,SIGNAL(changed(QStringList)),ui->disp,SLOT(setHint(QStringList)));
     dispLog("<b>''Welcome!''</b>");
 
     ui->lbl->hide();
@@ -210,4 +211,10 @@ void MainWindow::on_actionClose_Window_triggered()
 void MainWindow::on_actionClear_Log_triggered()
 {
     ui->logText->clear();
+}
+
+void MainWindow::on_actionShow_Frame_triggered(bool b)
+{
+    ui->disp->showFrame=b;
+    ui->disp->updateGL();
 }

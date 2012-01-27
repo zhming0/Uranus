@@ -110,6 +110,7 @@ font-size:15px;</string>
      <string>Display</string>
     </property>
     <addaction name="actionLit_up_the_image"/>
+    <addaction name="actionShow_Frame"/>
     <addaction name="actionClear_Log"/>
    </widget>
    <addaction name="menuFile"/>
@@ -136,6 +137,7 @@ font-size:15px;</string>
    <addaction name="actionStop"/>
    <addaction name="separator"/>
    <addaction name="actionLit_up_the_image"/>
+   <addaction name="actionShow_Frame"/>
    <addaction name="separator"/>
    <addaction name="actionNew_Window"/>
   </widget>
@@ -194,6 +196,18 @@ p, li { white-space: pre-wrap; }
      </item>
     </layout>
    </widget>
+  </widget>
+  <widget class="QDockWidget" name="hints">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="windowTitle">
+    <string>Hints</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="hintHelper" name="hintContents"/>
   </widget>
   <action name="actionOpen">
    <property name="icon">
@@ -305,6 +319,21 @@ p, li { white-space: pre-wrap; }
     <string>Clear Log</string>
    </property>
   </action>
+  <action name="actionShow_Frame">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/whitebg.png</normaloff>:/icons/whitebg.png</iconset>
+   </property>
+   <property name="text">
+    <string>Show Frame</string>
+   </property>
+   <property name="toolTip">
+    <string>Show a frame on the boundaries of the image</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -318,6 +347,12 @@ p, li { white-space: pre-wrap; }
    <class>ProcessTool</class>
    <extends>QWidget</extends>
    <header>processtool.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>hintHelper</class>
+   <extends>QWidget</extends>
+   <header>hinthelper.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

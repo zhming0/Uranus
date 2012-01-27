@@ -26,6 +26,7 @@ private:
     QProcess* cproc;
     QString openingFile,openingFileL,inFile,outFile;
 private slots:
+    void on_actionShow_Frame_triggered(bool);
     void on_actionClear_Log_triggered();
     void on_actionClose_Window_triggered();
     void on_actionLit_up_the_image_toggled(bool );

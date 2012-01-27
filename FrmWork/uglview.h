@@ -21,6 +21,7 @@ public:
     void setPrev(int x,int y);
     void setCurr(int x,int y);
     void setLighten(bool);
+    bool showFrame;
 private:
     ProgressDlg pdlg;
     bool lighten;
@@ -37,6 +38,8 @@ private:
     bool down;
     bool rotate;
     QString dispStr;
+    QStringList hints;
+    float _dx,_dy,_dz;
 
     QVector<float*> map;
     int w,h,sw,sh;
@@ -53,6 +56,7 @@ private:
 public slots:
     void doneReading();
     void updateProg();
+    void setHint(QStringList);
 signals:
     void doneGenerating();
     void setLbl(QString);

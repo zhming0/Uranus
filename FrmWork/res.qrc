@@ -21,5 +21,6 @@
         <file>icons/thunder.png</file>
         <file>icons/icon.png</file>
         <file>icons/close.png</file>
+        <file>icons/whitebg.png</file>
     </qresource>
 </RCC>
