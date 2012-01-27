@@ -12,6 +12,7 @@ UGLView::UGLView(QWidget *parent) :
     openFile="";
     opening=false;
     showFrame=false;
+    blend2=false;
     down=false;
     listLen=0;
     lighten=false;
@@ -24,9 +25,7 @@ void UGLView::initializeGL()
 {
     glEnable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
-    //glEnable(GL_TEXTURE_2D);
     glClearColor(0,0,0,0);
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
     listBase=glGenLists(2);
@@ -177,13 +176,13 @@ public:
                             coord[vSize*3+1]=_h*(i%h+rd/10)-1;
                             coord[vSize*3+2]=inc*(z+rd)-1;
 
-                            color[vSize*4]=0.4+0.6*col;
-                            color[vSize*4+1]=0.05+0.95*col;
-                            color[vSize*4+2]=0.05+0.95*col;
+                            color[vSize*4]=0.1+0.9*col;
+                            color[vSize*4+1]=col;
+                            color[vSize*4+2]=col;
                             if(!mono)
-                                col=col*inc*0.9;
+                                col=col*inc;
                             else
-                                col*=0.1;
+                                col=inc*10;
                             if(col>1)
                                 col=1;
                             color[vSize*4+3]=col;
@@ -281,6 +280,10 @@ void UGLView::paintGL()
         generate();
     }else
         raw=view();
+    if(blend2)
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+    else
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE);
     glPushMatrix();
     glScalef(zoom,zoom,zoom*zzoom);
     if(showFrame)

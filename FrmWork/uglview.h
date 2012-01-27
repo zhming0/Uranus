@@ -21,7 +21,7 @@ public:
     void setPrev(int x,int y);
     void setCurr(int x,int y);
     void setLighten(bool);
-    bool showFrame;
+    bool showFrame,blend2;
 private:
     ProgressDlg pdlg;
     bool lighten;

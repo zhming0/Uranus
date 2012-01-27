@@ -218,3 +218,9 @@ void MainWindow::on_actionShow_Frame_triggered(bool b)
     ui->disp->showFrame=b;
     ui->disp->updateGL();
 }
+
+void MainWindow::on_action2nd_Blend_Method_triggered(bool b)
+{
+    ui->disp->blend2=b;
+    ui->disp->updateGL();
+}
