@@ -110,6 +110,7 @@ font-size:15px;</string>
      <string>Display</string>
     </property>
     <addaction name="actionLit_up_the_image"/>
+    <addaction name="action2nd_Blend_Method"/>
     <addaction name="actionShow_Frame"/>
     <addaction name="actionClear_Log"/>
    </widget>
@@ -137,6 +138,7 @@ font-size:15px;</string>
    <addaction name="actionStop"/>
    <addaction name="separator"/>
    <addaction name="actionLit_up_the_image"/>
+   <addaction name="action2nd_Blend_Method"/>
    <addaction name="actionShow_Frame"/>
    <addaction name="separator"/>
    <addaction name="actionNew_Window"/>
@@ -332,6 +334,21 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="toolTip">
     <string>Show a frame on the boundaries of the image</string>
+   </property>
+  </action>
+  <action name="action2nd_Blend_Method">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/smile.png</normaloff>:/icons/smile.png</iconset>
+   </property>
+   <property name="text">
+    <string>2nd Blend Method</string>
+   </property>
+   <property name="toolTip">
+    <string>Use another kind of color blending.</string>
    </property>
   </action>
  </widget>

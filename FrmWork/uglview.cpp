@@ -6,12 +6,17 @@
 #include <QTextCodec>
 #include <QLabel>
 #include <QDebug>
+#include <QVector3D>
+#include <QVector>
+#include <math.h>
+#include <QHash>
 UGLView::UGLView(QWidget *parent) :
     QGLWidget(parent)
 {
     openFile="";
     opening=false;
     showFrame=false;
+    blend2=false;
     down=false;
     listLen=0;
     lighten=false;
@@ -24,9 +29,7 @@ void UGLView::initializeGL()
 {
     glEnable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
-    //glEnable(GL_TEXTURE_2D);
     glClearColor(0,0,0,0);
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
     listBase=glGenLists(2);
@@ -173,17 +176,17 @@ public:
                             }
                             const static int SHAKE=1000;
                             float rd=(qrand()%SHAKE/1.0f)/SHAKE;
-                            coord[vSize*3]=_w*(i/h+rd/10)-1;
-                            coord[vSize*3+1]=_h*(i%h+rd/10)-1;
+                            coord[vSize*3]=_h*(i%h+rd/10)-1;
+                            coord[vSize*3+1]=_w*(i/h+rd/10)-1;
                             coord[vSize*3+2]=inc*(z+rd)-1;
 
-                            color[vSize*4]=0.4+0.6*col;
-                            color[vSize*4+1]=0.05+0.95*col;
-                            color[vSize*4+2]=0.05+0.95*col;
+                            color[vSize*4]=0.1+0.9*col;
+                            color[vSize*4+1]=col;
+                            color[vSize*4+2]=col;
                             if(!mono)
-                                col=col*inc*0.9;
+                                col=col*inc;
                             else
-                                col*=0.1;
+                                col=inc*10;
                             if(col>1)
                                 col=1;
                             color[vSize*4+3]=col;
@@ -254,23 +257,53 @@ void UGLView::setLighten(bool b)
     lighten=b;
 }
 
-inline bool getPoint(QString& s,int& x, int& y,int& z)
+inline bool getPoint(QString& s,float& x, float& y,float& z,float *d=0)
 {
     QStringList l=s.split(',');
-    if(l.count()<3)
+    int c=(d==0)?3:4;
+    if(l.count()<c)
         return false;
     bool ok;
-    x=l[0].toUInt(&ok);
+    x=l[0].toFloat(&ok);
     if(!ok)
         return false;
-    y=l[1].toUInt(&ok);
+    y=l[1].toFloat(&ok);
     if(!ok)
         return false;
-    z=l[2].toUInt(&ok);
+    z=l[2].toFloat(&ok);
     if(!ok)
         return false;
+    if(d!=0)
+    {
+        *d=l[3].toFloat(&ok);
+        if(!ok)
+            *d=0;
+    }
     return true;
 }
+
+QVector3D sortSource,sortNorm;
+bool sortVectorLess(const QVector3D &p1,const QVector3D &p2)
+{
+    QVector3D t;
+    t=p1-sortSource;
+    qreal l1=t.length();
+    if(l1==0)
+        return true;
+    qreal a1=t.dotProduct(sortNorm,t)/sortNorm.length()/l1;
+    t=p2-sortSource;
+    qreal l2=t.length();
+    if(l2==0)
+        return false;
+    qreal a2=t.dotProduct(sortNorm,t)/sortNorm.length()/l2;
+    if(a1==a2)
+        return l1<l2;
+    if(a1>a2)
+        return true;
+    else
+        return false;
+}
+
 
 void UGLView::paintGL()
 {
@@ -281,6 +314,10 @@ void UGLView::paintGL()
         generate();
     }else
         raw=view();
+    if(blend2)
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+    else
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE);
     glPushMatrix();
     glScalef(zoom,zoom,zoom*zzoom);
     if(showFrame)
@@ -319,18 +356,6 @@ void UGLView::paintGL()
         glVertex3f(-1,1,-1);
         glEnd();
     }
-    //glPushMatrix();
-    //glLoadIdentity();
-//    float zm=2/zoom;
-//    glBegin(GL_POLYGON);
-//    glColor4f(0.5,0.5,0.5,1);
-//    glVertex3f(-zm,-zm,0);
-//    glVertex3f(-zm,zm,0);
-//    glVertex3f(zm,zm,0);
-//    glVertex3f(zm,-zm,0);
-//    glEnd();
-    //glPopMatrix();
-//    glDepthMask(GL_FALSE);
     glPointSize(2*(psize*zoom+pzoom));
     foreach(QString item,hints)
     {
@@ -344,11 +369,152 @@ void UGLView::paintGL()
             continue;
         QColor color(cl);
         glColor4f(color.red()/255.0,color.green()/255.0,color.blue()/255.0,1.0);
-        int x=0,y=0,z=0,x2=0,y2=0,z2=0;
+        float x=0,y=0,z=0,x2=0,y2=0,z2=0;
         switch(c)
         {
         case 2:
-            if(getPoint(l[1],x,y,z))
+            if(getPoint(l[1],x,y,z,&x2))
+            {
+                float a=x,b=y,c=z,d=x2;
+
+                y=-d/b*_dy-1;
+                z=-d/c*_dz-1;
+                QVector<QVector3D> points;
+                if(a!=0)
+                {
+                    y=2/_dy;
+                    z=2/_dz;
+                    x=-d/a*_dx-1;
+                    if(x>-1&&x<1)
+                        points.append(QVector3D(x,-1,-1));
+                    x=(-d-b*y)/a*_dx-1;
+                    if(x>-1&&x<1)
+                        points.append(QVector3D(x,1,-1));
+                    x=(-d-c*z)/a*_dx-1;
+                    if(x>-1&&x<1)
+                        points.append(QVector3D(x,-1,1));
+                    x=(-d-b*y-c*z)/a*_dx-1;
+                    if(x>-1&&x<1)
+                        points.append(QVector3D(x,1,1));
+                }
+                if(b!=0)
+                {
+                    x=2/_dx;
+                    z=2/_dz;
+                    y=-d/b*_dy-1;
+                    if(y>-1&&y<1)
+                        points.append(QVector3D(-1,y,-1));
+                    y=(-d-a*x)/b*_dy-1;
+                    if(y>-1&&y<1)
+                        points.append(QVector3D(1,y,-1));
+                    y=(-d-c*z)/b*_dy-1;
+                    if(y>-1&&y<1)
+                        points.append(QVector3D(-1,y,1));
+                    y=(-d-a*x-c*z)/b*_dy-1;
+                    if(y>-1&&y<1)
+                        points.append(QVector3D(1,y,1));
+                }
+                if(c!=0)
+                {
+                    x=2/_dx;
+                    y=2/_dy;
+                    z=-d/c*_dz-1;
+                    if(z>-1&&z<1)
+                        points.append(QVector3D(-1,-1,z));
+                    z=(-d-a*x)/c*_dz-1;
+                    if(z>-1&&z<1)
+                        points.append(QVector3D(1,-1,z));
+                    z=(-d-b*y)/c*_dz-1;
+                    if(z>-1&&z<1)
+                        points.append(QVector3D(-1,1,z));
+                    z=(-d-a*x-b*y)/c*_dz-1;
+                    if(z>-1&&z<1)
+                        points.append(QVector3D(1,1,z));
+                }
+
+                if(points.empty())
+                    continue;
+
+                QVector3D norm,source;
+                source=points.at(0);
+                norm=points.at(1);
+                QVector3D pt;
+                int cnt=points.count();
+                if(c==0)
+                {   //ax+by+cz+d=0
+                    if(a==0) //XoZ
+                    {
+                        if(norm.z()<source.z()||(norm.z()==source.z()&&norm.x()<source.x()))
+                        {
+                            source=points.at(1);
+                            norm=points.at(0);
+                        }
+                        for(int i=2;i<cnt;i++)
+                        {
+                            pt=points[i];
+                            if(pt.z()<norm.z()||(pt.z()==norm.z()&&pt.x()<norm.x()))
+                            {
+                                if(pt.z()<source.z()||(pt.z()==source.z()&&pt.x()<source.x()))
+                                {
+                                    norm=source;
+                                    source=pt;
+                                }else
+                                    norm=pt;
+                            }
+                        }
+                    }else //YoZ
+                    {
+                        if(norm.z()<source.z()||(norm.z()==source.z()&&norm.y()<source.y()))
+                        {
+                            source=points.at(1);
+                            norm=points.at(0);
+                        }
+                        for(int i=2;i<cnt;i++)
+                        {
+                            pt=points[i];
+                            if(pt.z()<norm.z()||(pt.z()==norm.z()&&pt.y()<norm.y()))
+                            {
+                                if(pt.z()<source.z()||(pt.z()==source.z()&&pt.y()<source.y()))
+                                {
+                                    norm=source;
+                                    source=pt;
+                                }else
+                                    norm=pt;
+                            }
+                        }
+                    }
+                }else   //XoY
+                {
+                    if(norm.y()<source.y()||(norm.y()==source.y()&&norm.x()<source.x()))
+                    {
+                        source=points.at(1);
+                        norm=points.at(0);
+                    }
+                    for(int i=2;i<cnt;i++)
+                    {
+                        pt=points[i];
+                        if(pt.y()<norm.y()||(pt.y()==norm.y()&&pt.x()<norm.x()))
+                        {
+                            if(pt.y()<source.y()||(pt.y()==source.y()&&pt.x()<source.x()))
+                            {
+                                norm=source;
+                                source=pt;
+                            }else
+                                norm=pt;
+                        }
+                    }
+                }
+                sortSource=source;
+                sortNorm=norm-source;
+                qSort(points.begin(),points.end(),sortVectorLess);
+                glColor4f(color.red()/255.0,color.green()/255.0,color.blue()/255.0,0.3);
+                glBegin(GL_POLYGON);
+                foreach(pt,points)
+                {
+                    glVertex3d(pt.x(),pt.y(),pt.z());
+                }
+                glEnd();
+            }else if(getPoint(l[1],x,y,z))
             {
                 glBegin(GL_POINTS);
                 glVertex3f(x*_dx-1,y*_dy-1,z*_dz-1);
@@ -382,7 +548,6 @@ void UGLView::paintGL()
         {
             glCallList(listBase+i);
         }
-//    glDepthMask(GL_TRUE);
     glPopMatrix();
 }
 
