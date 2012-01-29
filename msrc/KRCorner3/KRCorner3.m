@@ -1,10 +1,17 @@
 function [ds_out, ps_out] = KRCorner3(ds_in, ps_in)
+%KRCORNER3_ENTRY    This function is the entry to KRCorner
+%    Input:    Dataset and pixelSize
+%    Output:    Dataset and pixelSize
+%    Author:    Tsenmu
+%    Date:    2012.01.29
+%    Reference:    Karl Rohr* On 3D differential operators for detecting point landmarks
+
+%% Don't worry, what under this comment is all about mathematics!
     ps_out = ps_in;
     ds_in = squeeze(public_dataset2double(ds_in));
-%     size(ds_in)
     [r c h] = size(ds_in);
     
-%% Don't worry, what under this comment is all about mathematics!
+
     f = double(zeros([r+2, c+2, h+2]));
     f(2:r+1, 2:c+1, 2:h+1) = ds_in;
     clear ds_in;
@@ -30,9 +37,9 @@ function [ds_out, ps_out] = KRCorner3(ds_in, ps_in)
             end
         end
     end
-    ds_out_uint8 = uint8(zeros([r, c, h]));
-    op = double(ones([3 3 3]));
-    op(2, 2, 2) = 0;
+     ds_out_uint8 = uint8(zeros([r, c, h]));
+%     op = double(ones([3 3 3]));
+%     op(2, 2, 2) = 0;
     for ri = 2 : r+1
         for ci = 2 : c+1
             for z = 2 : h
