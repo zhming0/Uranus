@@ -1,104 +1,75 @@
-function bw = KRCorner3(I)
-%KRCORNER    KR Corner algorithm.
-%    Input:    Gray scale image.
-%    Output:    Black white image.
-%    Author:    Tsenmu
-%    Date:    2012.01.12
-%    Reference:    
-
-
-    %H = fspecial('prewitt');
-    %I = filter2(H, I);
-    I = int32(I);
-    [r c] = size(I);
-    img = int32(zeros(r+2, c+2));
-    KR = double(zeros(r, c));
-    img(2:r+1, 2:c+1) = I;
+function [ds_out, ps_out] = KRCorner3(ds_in, ps_in)
+    ps_out = ps_in;
+    ds_in = squeeze(public_dataset2double(ds_in));
+%     size(ds_in)
+    [r c h] = size(ds_in);
     
-    bw = false(r+2, c+2);
-    img_x = int32(zeros(r+2, c+2));
-    img_y = int32(zeros(r+2, c+2));
-    img_xx = int32(zeros(r+2, c+2));
-    img_xy = int32(zeros(r+2, c+2));
-    img_yy = int32(zeros(r+2, c+2));
-    img_yx = int32(zeros(r+2, c+2));
-    
-    op_x = int32([-1 0 1]);
-    op_y = int32([-1 0 1]');
-    
-    for y = 2 : r+1
-        for x = 2 : c+1
-            img_x(y, x) = sum(img(y, x-1:x+1) .* op_x);
-            img_y(y, x) = sum(img(y-1:y+1, x) .* op_y);
-        end
-    end
-    
-    for y = 2 : r+1
-        for x = 2 : c+1
-            img_xx(y, x) = sum(img(y, x-1:x+1) .* op_x);
-            img_xy(y, x) = sum(img(y-1:y+1, x) .* op_y);
-            img_yy(y, x) = sum(img(y-1:y+1, x) .* op_y);
-            img_yx(y, x) = sum(img(y, x-1:x+1) .* op_x);
-        end
-    end
-    
-    for y = 2 : r+1
-        for x = 2: c+1
-            KR(y-1, x-1) = double((img_x(y, x))^2*img_yy(y,x) ...
-                - 2*img_x(y,x)*img_y(y,x)*img_xy(y,x) ...
-                + (img_y(y, x)^2*img_xx(y, x))) / ...
-                (double(img_x(y, x)^2 + img_y(y, x)^2) ^ 1.5);
-        end
-    end           
-    for y = 1 :r
-        for x = 1 :c
-            if KR(y, x) == 0
-                bw(y+1, x+1) = 1;
+%% Don't worry, what under this comment is all about mathematics!
+    f = double(zeros([r+2, c+2, h+2]));
+    f(2:r+1, 2:c+1, 2:h+1) = ds_in;
+    clear ds_in;
+    ds_out = double(zeros([r+2, c+2, h+2]));
+    for ri = 2 : r+1
+        for ci = 2 : c+1
+            for z = 2 : h
+                g_r = f(ri+1, ci, z) - f(ri, ci, z);
+                g_c = f(ri, ci+1, z) - f(ri, ci, z);
+                g_h = f(ri, ci, z+1) - f(ri, ci, z);
+                g_rr = f(ri+1, ci, z) - 2*f(ri, ci, z)  + f(ri-1, ci, z);
+                g_cc = f(ri, ci+1, z) - 2*f(ri, ci, z) + f(ri, ci-1, z);
+                g_hh = f(ri, ci, z+1) - 2*f(ri, ci, z) + f(ri, ci, z-1);
+                g_rc = f(ri+1, ci-1, z) - f(ri, ci-1, z) ...
+                    - f(ri+1, ci, z) + f(ri, ci, z);
+                g_rh = f(ri+1, ci, z-1) - f(ri, ci, z-1) ...
+                    - f(ri+1, ci, z) + f(ri, ci, z);
+                g_ch = f(ri, ci+1, z-1) - f(ri, ci, z-1) ...
+                    - f(ri, ci+1, z) + f(ri, ci, z);
+                ds_out(ri, ci, z) = (g_r^2*(g_cc+g_hh) + g_c^2*(g_rr*g_hh) ...
+                    + g_h^2*(g_rr*g_cc) - 2*(g_r*g_c*g_rc+g_r*g_h*g_rh ...
+                    +g_c*g_h*g_ch)) / (g_r^2 + g_c^2 + g_h^2); 
             end
         end
     end
-    bw = uint8(bw) * 255;
-    
-    [posr, posc] = find(bw == 255);
-    %KR
-        
-%     bw_1 = uint8(zeros(r+2, c+2));
-%     bw_1 = bw;
-%     for y = 2 : r+1
-%         for x = 2: c+1
-%             count = 0;            
-%             if bw_1(y-1,x) == 255 
-%                 count = count + 1;
-%             end
-%             if bw_1(y+1,x) == 255
-%                 count = count + 1;
-%             end
-%             if bw_1(y,x+1) == 255
-%                 count = count + 1;
-%             end
-%             if bw_1(y,x-1) == 255
-%                 count = count + 1;
-%             end
-%             if bw_1(y+1,x+1) == 255
-%                 count = count + 1;
-%             end
-%             if bw_1(y+1,x-1) == 255
-%                 count = count + 1;
-%             end
-%             if bw_1(y-1,x+1) == 255
-%                 count = count + 1;
-%             end
-%             if bw_1(y-1,x-1) == 255
-%                 count = count + 1;
-%             end
-%            % count
-%             if count 
-%                 bw(y, x) = 0;
-%             end
-%          end
-%     end
-    bw = bw(2:r+1, 2:c+1);
-    figure; imshow(bw);
-    hold on;
-   % plot(posc, posr, 'r+');
+    ds_out_uint8 = uint8(zeros([r, c, h]));
+    op = double(ones([3 3 3]));
+    op(2, 2, 2) = 0;
+    for ri = 2 : r+1
+        for ci = 2 : c+1
+            for z = 2 : h
+                
+                  if (ds_out(ri, ci, z) > ds_out(ri+1, ci+1, z+1) && ...
+                      ds_out(ri, ci, z) > ds_out(ri+1, ci+1, z) && ...
+                      ds_out(ri, ci, z) > ds_out(ri+1, ci+1, z-1) && ...
+                      ds_out(ri, ci, z) > ds_out(ri+1, ci, z+1) && ...
+                      ds_out(ri, ci, z) > ds_out(ri+1, ci, z) && ...
+                      ds_out(ri, ci, z) > ds_out(ri+1, ci, z-1) && ...
+                      ds_out(ri, ci, z) > ds_out(ri+1, ci-1, z+1) && ...
+                      ds_out(ri, ci, z) > ds_out(ri+1, ci-1, z) && ...
+                      ds_out(ri, ci, z) > ds_out(ri+1, ci-1, z-1) && ...
+                      ds_out(ri, ci, z) > ds_out(ri, ci+1, z+1) && ...
+                      ds_out(ri, ci, z) > ds_out(ri, ci+1, z) && ...
+                      ds_out(ri, ci, z) > ds_out(ri, ci+1, z-1) && ...
+                      ds_out(ri, ci, z) > ds_out(ri, ci, z+1) && ...
+                      ds_out(ri, ci, z) > ds_out(ri, ci, z-1) && ...
+                      ds_out(ri, ci, z) > ds_out(ri, ci-1, z+1) && ...
+                      ds_out(ri, ci, z) > ds_out(ri, ci-1, z) && ...
+                      ds_out(ri, ci, z) > ds_out(ri, ci-1, z-1) && ...
+                      ds_out(ri, ci, z) > ds_out(ri-1, ci+1, z+1) && ...
+                      ds_out(ri, ci, z) > ds_out(ri-1, ci+1, z) && ...
+                      ds_out(ri, ci, z) > ds_out(ri-1, ci+1, z-1) && ...
+                      ds_out(ri, ci, z) > ds_out(ri-1, ci, z+1) && ...
+                      ds_out(ri, ci, z) > ds_out(ri-1, ci, z) && ...
+                      ds_out(ri, ci, z) > ds_out(ri-1, ci, z-1) && ...
+                      ds_out(ri, ci, z) > ds_out(ri-1, ci-1, z+1) && ...
+                      ds_out(ri, ci, z) > ds_out(ri-1, ci-1, z) )
+
+                ds_out_uint8(ri-1, ci-1, z-1) = 255;
+                end
+            end
+        end
+    end
+     clear ds_out;
+     ds_out = ds_out_uint8;
+     ds_out = public_expand(ds_out);
+     clear ds_out_uint8;
 end
