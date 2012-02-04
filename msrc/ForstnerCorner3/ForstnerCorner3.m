@@ -1,12 +1,13 @@
-function [ds_out, ps_out] = KRCorner3(ds_in, ps_in)
-%KRCORNER3_ENTRY    This function is the entry to KRCorner
+function [ds_out, ps_out] = ForstnerCorner3(ds_in, ps_in)
+%FORSTNERCORNER3    This function use the operator proposed by Forstner to
+%                   detect corners.
 %    Input:    Dataset and pixelSize
 %    Output:    Dataset and pixelSize
 %    Author:    Tsenmu
 %    Date:    2012.01.29
 %    Reference:    Karl Rohr* On 3D differential operators for detecting point landmarks
 
-%% Don't worry, what under this comment is all about mathematics!
+    %% Don't worry, what under this comment is all about mathematics!
     ps_out = ps_in;
     ds_in = squeeze(public_dataset2double(ds_in));
     [r c h] = size(ds_in);
@@ -19,31 +20,20 @@ function [ds_out, ps_out] = KRCorner3(ds_in, ps_in)
     for ri = 2 : r+1
         for ci = 2 : c+1
             for z = 2 : h
-                g_r = f(ri+1, ci, z) - f(ri, ci, z);
-                g_c = f(ri, ci+1, z) - f(ri, ci, z);
-                g_h = f(ri, ci, z+1) - f(ri, ci, z);
-                g_rr = f(ri+1, ci, z) - 2*f(ri, ci, z)  + f(ri-1, ci, z);
-                g_cc = f(ri, ci+1, z) - 2*f(ri, ci, z) + f(ri, ci-1, z);
-                g_hh = f(ri, ci, z+1) - 2*f(ri, ci, z) + f(ri, ci, z-1);
-                g_rc = f(ri+1, ci-1, z) - f(ri, ci-1, z) ...
-                    - f(ri+1, ci, z) + f(ri, ci, z);
-                g_rh = f(ri+1, ci, z-1) - f(ri, ci, z-1) ...
-                    - f(ri+1, ci, z) + f(ri, ci, z);
-                g_ch = f(ri, ci+1, z-1) - f(ri, ci, z-1) ...
-                    - f(ri, ci+1, z) + f(ri, ci, z);
-                ds_out(ri, ci, z) = (g_r^2*(g_cc+g_hh) + g_c^2*(g_rr*g_hh) ...
-                    + g_h^2*(g_rr*g_cc) - 2*(g_r*g_c*g_rc+g_r*g_h*g_rh ...
-                    +g_c*g_h*g_ch)) / (g_r^2 + g_c^2 + g_h^2); 
+                g_r = (f(ri+1, ci, z) - f(ri-1, ci, z))/2;
+                g_c = (f(ri, ci+1, z) - f(ri, ci-1, z))/2;
+                g_h = (f(ri, ci, z+1) - f(ri, ci, z-1))/2;
+                Cg = [g_r^g_r, g_r*g_c, g_r*g_h; ...
+                    g_r*g_c, g_c^2, g_c*g_h; ...
+                    g_r*g_h, g_c*g_h, g_h^2];
+                ds_out(ri, ci, z) = det(Cg) / trace(Cg);
             end
         end
     end
      ds_out_uint8 = uint8(zeros([r, c, h]));
-%     op = double(ones([3 3 3]));
-%     op(2, 2, 2) = 0;
     for ri = 2 : r+1
         for ci = 2 : c+1
             for z = 2 : h
-                
                   if (ds_out(ri, ci, z) > ds_out(ri+1, ci+1, z+1) && ...
                       ds_out(ri, ci, z) > ds_out(ri+1, ci+1, z) && ...
                       ds_out(ri, ci, z) > ds_out(ri+1, ci+1, z-1) && ...

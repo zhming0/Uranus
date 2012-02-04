@@ -6,7 +6,10 @@
 #include <QTextCodec>
 #include <QLabel>
 #include <QDebug>
+#include <QVector3D>
+#include <QVector>
 #include <math.h>
+#include <QHash>
 UGLView::UGLView(QWidget *parent) :
     QGLWidget(parent)
 {
@@ -279,6 +282,29 @@ inline bool getPoint(QString& s,float& x, float& y,float& z,float *d=0)
     return true;
 }
 
+QVector3D sortSource,sortNorm;
+bool sortVectorLess(const QVector3D &p1,const QVector3D &p2)
+{
+    QVector3D t;
+    t=p1-sortSource;
+    qreal l1=t.length();
+    if(l1==0)
+        return true;
+    qreal a1=t.dotProduct(sortNorm,t)/sortNorm.length()/l1;
+    t=p2-sortSource;
+    qreal l2=t.length();
+    if(l2==0)
+        return false;
+    qreal a2=t.dotProduct(sortNorm,t)/sortNorm.length()/l2;
+    if(a1==a2)
+        return l1<l2;
+    if(a1>a2)
+        return true;
+    else
+        return false;
+}
+
+
 void UGLView::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -330,18 +356,6 @@ void UGLView::paintGL()
         glVertex3f(-1,1,-1);
         glEnd();
     }
-//    glPushMatrix();
-//    glLoadIdentity();
-//    float zm=2/zoom;
-//    glBegin(GL_POLYGON);
-//    glColor4f(0.5,0.5,0.5,1);
-//    glVertex3f(-zm,-zm,0);
-//    glVertex3f(-zm,zm,0);
-//    glVertex3f(zm,zm,0);
-//    glVertex3f(zm,-zm,0);
-//    glEnd();
-//    glPopMatrix();
-//    glDepthMask(GL_FALSE);
     glPointSize(2*(psize*zoom+pzoom));
     foreach(QString item,hints)
     {
@@ -360,28 +374,28 @@ void UGLView::paintGL()
         {
         case 2:
             if(getPoint(l[1],x,y,z,&x2))
-            {   //ax+by+cz+d=0
-                glColor4f(color.red()/255.0,color.green()/255.0,color.blue()/255.0,0.5);
+            {
                 float a=x,b=y,c=z,d=x2;
+
                 y=-d/b*_dy-1;
                 z=-d/c*_dz-1;
-                glBegin(GL_TRIANGLE_STRIP);
+                QVector<QVector3D> points;
                 if(a!=0)
                 {
                     y=2/_dy;
                     z=2/_dz;
                     x=-d/a*_dx-1;
                     if(x>-1&&x<1)
-                        glVertex3f(x,-1,-1);
+                        points.append(QVector3D(x,-1,-1));
                     x=(-d-b*y)/a*_dx-1;
                     if(x>-1&&x<1)
-                        glVertex3f(x,1,-1);
+                        points.append(QVector3D(x,1,-1));
                     x=(-d-c*z)/a*_dx-1;
                     if(x>-1&&x<1)
-                        glVertex3f(x,-1,1);
+                        points.append(QVector3D(x,-1,1));
                     x=(-d-b*y-c*z)/a*_dx-1;
                     if(x>-1&&x<1)
-                        glVertex3f(x,1,1);
+                        points.append(QVector3D(x,1,1));
                 }
                 if(b!=0)
                 {
@@ -389,16 +403,16 @@ void UGLView::paintGL()
                     z=2/_dz;
                     y=-d/b*_dy-1;
                     if(y>-1&&y<1)
-                        glVertex3f(-1,y,-1);
+                        points.append(QVector3D(-1,y,-1));
                     y=(-d-a*x)/b*_dy-1;
                     if(y>-1&&y<1)
-                        glVertex3f(1,y,-1);
+                        points.append(QVector3D(1,y,-1));
                     y=(-d-c*z)/b*_dy-1;
                     if(y>-1&&y<1)
-                        glVertex3f(-1,y,1);
+                        points.append(QVector3D(-1,y,1));
                     y=(-d-a*x-c*z)/b*_dy-1;
                     if(y>-1&&y<1)
-                        glVertex3f(1,y,1);
+                        points.append(QVector3D(1,y,1));
                 }
                 if(c!=0)
                 {
@@ -406,16 +420,98 @@ void UGLView::paintGL()
                     y=2/_dy;
                     z=-d/c*_dz-1;
                     if(z>-1&&z<1)
-                        glVertex3f(-1,-1,z);
+                        points.append(QVector3D(-1,-1,z));
                     z=(-d-a*x)/c*_dz-1;
                     if(z>-1&&z<1)
-                        glVertex3f(1,-1,z);
+                        points.append(QVector3D(1,-1,z));
                     z=(-d-b*y)/c*_dz-1;
                     if(z>-1&&z<1)
-                        glVertex3f(-1,1,z);
+                        points.append(QVector3D(-1,1,z));
                     z=(-d-a*x-b*y)/c*_dz-1;
                     if(z>-1&&z<1)
-                        glVertex3f(1,1,z);
+                        points.append(QVector3D(1,1,z));
+                }
+
+                if(points.empty())
+                    continue;
+
+                QVector3D norm,source;
+                source=points.at(0);
+                norm=points.at(1);
+                QVector3D pt;
+                int cnt=points.count();
+                if(c==0)
+                {   //ax+by+cz+d=0
+                    if(a==0) //XoZ
+                    {
+                        if(norm.z()<source.z()||(norm.z()==source.z()&&norm.x()<source.x()))
+                        {
+                            source=points.at(1);
+                            norm=points.at(0);
+                        }
+                        for(int i=2;i<cnt;i++)
+                        {
+                            pt=points[i];
+                            if(pt.z()<norm.z()||(pt.z()==norm.z()&&pt.x()<norm.x()))
+                            {
+                                if(pt.z()<source.z()||(pt.z()==source.z()&&pt.x()<source.x()))
+                                {
+                                    norm=source;
+                                    source=pt;
+                                }else
+                                    norm=pt;
+                            }
+                        }
+                    }else //YoZ
+                    {
+                        if(norm.z()<source.z()||(norm.z()==source.z()&&norm.y()<source.y()))
+                        {
+                            source=points.at(1);
+                            norm=points.at(0);
+                        }
+                        for(int i=2;i<cnt;i++)
+                        {
+                            pt=points[i];
+                            if(pt.z()<norm.z()||(pt.z()==norm.z()&&pt.y()<norm.y()))
+                            {
+                                if(pt.z()<source.z()||(pt.z()==source.z()&&pt.y()<source.y()))
+                                {
+                                    norm=source;
+                                    source=pt;
+                                }else
+                                    norm=pt;
+                            }
+                        }
+                    }
+                }else   //XoY
+                {
+                    if(norm.y()<source.y()||(norm.y()==source.y()&&norm.x()<source.x()))
+                    {
+                        source=points.at(1);
+                        norm=points.at(0);
+                    }
+                    for(int i=2;i<cnt;i++)
+                    {
+                        pt=points[i];
+                        if(pt.y()<norm.y()||(pt.y()==norm.y()&&pt.x()<norm.x()))
+                        {
+                            if(pt.y()<source.y()||(pt.y()==source.y()&&pt.x()<source.x()))
+                            {
+                                norm=source;
+                                source=pt;
+                            }else
+                                norm=pt;
+                        }
+                    }
+                }
+                sortSource=source;
+                sortNorm=norm-source;
+                qSort(points.begin(),points.end(),sortVectorLess);
+                glColor4f(color.red()/255.0,color.green()/255.0,color.blue()/255.0,0.3);
+                glBegin(GL_POLYGON);
+                foreach(pt,points)
+                {
+                    glVertex3d(pt.x(),pt.y(),pt.z());
                 }
                 glEnd();
             }else if(getPoint(l[1],x,y,z))
