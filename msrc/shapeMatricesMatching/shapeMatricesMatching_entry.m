@@ -9,13 +9,13 @@ function [] = shapeMatricesMatching_entry()
     inputFile1 = char(input(''));
     outFile = char(input(''));
     
-    inputFile2 = io_getfile('*.urw', 'Please choose one more processed urw file');
+    inputFile2 = io_getfile('*.urw', 'Please choose one mr urw file');
     
     [dataset1 pixeldist1]= public_urw2dataset(inputFile1);
     [dataset2 pixeldist2]= public_urw2dataset(inputFile2);
     
     %pixeldist1 = [1; 1; 1;];
     %pixeldist2 = [1; 1; 1;];
-    
-    arg1 = io_prompt(20, 'Set the number of step.');
+    arg1 = io_prompt(5, 'Set the number of step.');
+    ret = shapeMatricesMatching(dataset1, dataset2, arg1);
 end

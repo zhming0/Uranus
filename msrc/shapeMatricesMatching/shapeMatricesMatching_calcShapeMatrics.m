@@ -1,4 +1,4 @@
-function [shapeMat] = shapeMatricesMatching_calcShapeMatrics(pointset, num_step)
+function [shapeMat centroid] = shapeMatricesMatching_calcShapeMatrics(pointset, num_step)
 %ShapeMatricsMatching_CALCSHAPEMATRICS    Figure out the shape matrix of a
 %                                         shape.
 %    Input:    Pointset in the form of (N * 3 matrixs); 
@@ -9,6 +9,7 @@ function [shapeMat] = shapeMatricesMatching_calcShapeMatrics(pointset, num_step)
     [n, ~] = size(pointset);
     result = zeros(26, num_step);
     centerpoint = mean(pointset);
+    centroid = centerpoint;
     maxlen = -1;
     for i = 1:n
         dist(i) = sqrt(sum((pointset(i, :) - centerpoint).^2));
