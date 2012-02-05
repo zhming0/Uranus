@@ -25,7 +25,7 @@ function [result] = public_findThinnestGap(dataset)
                     len = len+1;
                     tmpendpoint = [x, y, z];
                 elseif state == 1 && dataset(x, y, z) == 0
-                    if len > 20 && len < minlen
+                    if len > 10 && len < minlen
                         minlen = len;
                         startpoint = tmpstartpoint;
                         endpoint = tmpendpoint;
