@@ -1,6 +1,8 @@
-d = public_urw2dataset('C:\Users\acer\Desktop\ct_axis.urw');
-[r, c, ~, h] = size(d);
-found = false;
+function point = centralFitting3_getPoint( inFile )
+%CENTRALFITTING3_GETPOINT Find the special farterst point
+%   Detailed explanation goes here
+d = public_urw2dataset(inFile);
+[~, ~, ~, h] = size(d);
 rp = zeros(1, h); cp = zeros(1, h);
 for z = 1: h
     [rp(1, z), cp(1, z)] = find(d(:, :, 1, z));
@@ -15,12 +17,7 @@ rsqrt = sqrt(rsq);
 rsqrt_mean = mean(rsqrt);
 rsqrt_std = std(rsqrt);
 rsqrt_norm = (rsqrt - rsqrt_mean)/ rsqrt_std;
-min=1;
-for z = 2: h
-    if(rsqrt_norm(z)<rsqrt_norm(min))
-        min=z;
-    end
+[~,mi]=min(rsqrt_norm);
+point=[cp(1,mi) rp(1,mi) mi];
+
 end
-cp(1,min)
-rp(1,min)
-min
